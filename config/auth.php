@@ -16,7 +16,9 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
+        // Token-based by default: the whole app (API + web fetches) authenticates
+        // through Sanctum's stateless token guard. There is no session guard in use.
+        'guard' => env('AUTH_GUARD', 'sanctum'),
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
@@ -38,6 +40,15 @@ return [
     */
 
     'guards' => [
+        // Stateless API-token guard used everywhere. Sanctum registers this guard
+        // automatically; it is declared explicitly here for clarity.
+        'sanctum' => [
+            'driver' => 'sanctum',
+            'provider' => 'users',
+        ],
+
+        // Retained only so Laravel internals that reference the "web" guard resolve;
+        // no route uses it and session middleware is disabled, so it never authenticates.
         'web' => [
             'driver' => 'session',
             'provider' => 'users',

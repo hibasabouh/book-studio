@@ -20,7 +20,8 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'role' => $this->role->value,
-            'avatar' => $this->avatar,
+            'avatar' => file_url($this->avatar),
+            'has_password' => ! is_null($this->password),
             'email_verified_at' => $this->email_verified_at,
             'created_at' => $this->created_at,
         ];

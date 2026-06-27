@@ -7,4 +7,6 @@ return [
     'otp_invalid' => 'The verification code is invalid or has expired.',
     'otp_sent' => 'A new verification code has been sent.',
     'google_invalid' => 'The Google token is invalid or was issued for another app.',
+    'profile_updated' => 'Profile updated.',
+    'password_updated' => 'Password updated.',
 ];

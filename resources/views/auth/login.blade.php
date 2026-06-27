@@ -47,8 +47,7 @@
                             body: JSON.stringify(this.form),
                         });
                         window.auth.setToken(data.token);
-                        // TODO: redirect to /books once the library exists (Commit 10).
-                        window.location.href = '/';
+                        window.location.href = '/dashboard';
                     } catch (e) {
                         this.error = e.data?.message || this.$store.i18n.t('login.error');
                     } finally {

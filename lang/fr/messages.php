@@ -7,4 +7,6 @@ return [
     'otp_invalid' => 'Le code de vérification est invalide ou a expiré.',
     'otp_sent' => 'Un nouveau code de vérification a été envoyé.',
     'google_invalid' => 'Le jeton Google est invalide ou a été émis pour une autre application.',
+    'profile_updated' => 'Profil mis à jour.',
+    'password_updated' => 'Mot de passe mis à jour.',
 ];

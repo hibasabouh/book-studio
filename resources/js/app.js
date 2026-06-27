@@ -54,7 +54,8 @@ Alpine.store('auth', {
             return;
         }
         try {
-            this.user = await fetchJson('/api/user');
+            const data = await fetchJson('/api/user');
+            this.user = data.user;
         } catch (e) {
             this.logout();
         } finally {

@@ -50,8 +50,7 @@
                         });
                         this.ok = true;
                         this.message = data.message;
-                        // TODO: redirect to /books once the library exists (Commit 10).
-                        setTimeout(() => (window.location.href = '/'), 800);
+                        setTimeout(() => (window.location.href = '/dashboard'), 800);
                     } catch (e) {
                         this.ok = false;
                         this.message = e.data?.message || this.$store.i18n.t('verify.error');

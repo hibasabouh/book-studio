@@ -36,10 +36,13 @@ export function isAuthenticated() {
  * @returns {Promise<any>} parsed JSON body (or null for empty responses)
  */
 export async function fetchJson(url, options = {}) {
+    // For FormData (file uploads) let the browser set the multipart Content-Type.
+    const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
+
     const headers = {
         Accept: 'application/json',
         'X-Locale': getLocale(),
-        ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+        ...(options.body && !isFormData ? { 'Content-Type': 'application/json' } : {}),
         ...(options.headers || {}),
     };
 

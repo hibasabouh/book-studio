@@ -12,7 +12,9 @@
                 </a>
 
                 <div class="hidden items-center gap-4 sm:flex" x-show="$store.auth.check">
-                    <a href="/books" class="text-sm font-medium text-gray-600 hover:text-gray-900" x-text="$t('nav.library')"></a>
+                    <a href="/dashboard" class="text-sm font-medium text-gray-600 hover:text-gray-900" x-text="$t('nav.dashboard')"></a>
+                    <a href="/admin" x-show="$store.auth.user?.role === 'admin'"
+                       class="text-sm font-medium text-gray-600 hover:text-gray-900" x-text="$t('nav.admin')"></a>
                 </div>
             </div>
 
@@ -32,7 +34,16 @@
                 {{-- Authenticated actions --}}
                 <template x-if="$store.auth.ready && $store.auth.check">
                     <div class="flex items-center gap-3">
-                        <span class="hidden text-sm text-gray-600 sm:inline" x-text="$store.auth.user?.name"></span>
+                        <a href="/profile" class="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900">
+                            <template x-if="$store.auth.user?.avatar">
+                                <img :src="$store.auth.user.avatar" alt="" class="h-7 w-7 rounded-full object-cover ring-1 ring-gray-200">
+                            </template>
+                            <template x-if="!$store.auth.user?.avatar">
+                                <span class="flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-500"
+                                      x-text="($store.auth.user?.name || '?').charAt(0).toUpperCase()"></span>
+                            </template>
+                            <span x-text="$store.auth.user?.name || $t('nav.profile')"></span>
+                        </a>
                         <button type="button"
                                 @click="$store.auth.logout(); window.location.href = '/login'"
                                 class="text-sm font-medium text-gray-600 hover:text-gray-900"

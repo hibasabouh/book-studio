@@ -49,8 +49,7 @@
                     });
                     window.auth.setToken(data.token);
                     // Google accounts are pre-verified — straight in.
-                    // TODO: redirect to /books once the library exists (Commit 10).
-                    window.location.href = '/';
+                    window.location.href = '/dashboard';
                 } catch (e) {
                     alert(e.data?.message || window.Alpine.store('i18n').t('google.error'));
                 }

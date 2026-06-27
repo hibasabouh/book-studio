@@ -18,7 +18,6 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -109,7 +108,7 @@ class AuthController extends Controller
             $user = new User();
             $user->name = $claims['name'];
             $user->email = $claims['email'];
-            $user->password = Str::random(40); // unusable placeholder; they sign in via Google
+            $user->password = null; // no password until they set one in their profile
             $user->role = Role::User;
         }
 
@@ -139,11 +138,12 @@ class AuthController extends Controller
     }
 
     /**
-     * Return the authenticated user.
+     * Return the authenticated user (nested under `user`, like every other
+     * endpoint, so the client reads one consistent shape).
      */
-    public function user(Request $request): UserResource
+    public function user(Request $request): JsonResponse
     {
-        return new UserResource($request->user());
+        return response()->json(['user' => new UserResource($request->user())]);
     }
 
     /**

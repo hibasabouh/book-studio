@@ -18,6 +18,9 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 // OTP-entry page (redirect target of the `verified` middleware).
 Route::get('/email/verify', [AuthController::class, 'showVerifyEmail'])->name('verification.notice');
 
+// Forgot/reset password page (two-step: email → code + new password).
+Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
+
 // Authenticated page shells (auth enforced client-side; data via /api).
 Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

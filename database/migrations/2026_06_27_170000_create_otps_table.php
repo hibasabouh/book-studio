@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('code', 64);          // hashed, never stored in plain text
             $table->enum('channel', ['email']);
-            $table->enum('purpose', ['verify']);
+            $table->enum('purpose', ['verify', 'reset']);
             $table->string('target', 191);       // address the code was sent to
             $table->timestamp('expires_at');
             $table->timestamp('used_at')->nullable();

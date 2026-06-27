@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Enums\OtpChannel;
 use App\Enums\OtpPurpose;
 use App\Enums\Role;
+use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\GoogleAuthRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\VerifyOtpRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -44,6 +46,14 @@ class AuthController extends Controller
     public function showVerifyEmail(): View
     {
         return view('auth.verify-email');
+    }
+
+    /**
+     * Render the forgot/reset password page shell (two-step: email → code+password).
+     */
+    public function showForgotPassword(): View
+    {
+        return view('auth.forgot-password');
     }
 
     /**
@@ -187,5 +197,47 @@ class AuthController extends Controller
         $otp->send($user, OtpChannel::Email, $code);
 
         return response()->json(['message' => __('messages.otp_sent')]);
+    }
+
+    /**
+     * Send a password-reset OTP to the account's email.
+     */
+    public function forgotPassword(ForgotPasswordRequest $request, OtpService $otp): JsonResponse
+    {
+        $user = User::where('email', $request->validated('email'))->first();
+
+        if (! $user) {
+            return response()->json(['message' => __('messages.account_not_found')], 404);
+        }
+
+        $code = $otp->generate($user, OtpChannel::Email, OtpPurpose::Reset);
+        $otp->send($user, OtpChannel::Email, $code);
+
+        return response()->json([
+            'message' => __('messages.password_reset_sent'),
+            'user_id' => $user->id,
+        ]);
+    }
+
+    /**
+     * Verify the reset OTP and set a new password, revoking all existing tokens.
+     */
+    public function resetPassword(ResetPasswordRequest $request, OtpService $otp): JsonResponse
+    {
+        $user = User::findOrFail($request->validated('user_id'));
+
+        $verified = $otp->verify($user, OtpPurpose::Reset, $request->validated('code'));
+
+        if (! $verified) {
+            return response()->json(['message' => __('messages.otp_invalid')], 422);
+        }
+
+        $user->password = $request->validated('password');
+        $user->save();
+
+        // Force re-login everywhere with the new password.
+        $user->tokens()->delete();
+
+        return response()->json(['message' => __('messages.password_reset_done')]);
     }
 }

@@ -72,5 +72,15 @@
   "profile.avatar_subtitle": "Téléchargez un JPG, PNG ou WebP (max 2 Mo).",
   "profile.change_avatar": "Changer la photo",
   "profile.uploading": "Téléchargement…",
-  "profile.set_password": "Définir le mot de passe"
+  "profile.set_password": "Définir le mot de passe",
+  "forgot.link": "Mot de passe oublié ?",
+  "forgot.title": "Réinitialisez votre mot de passe",
+  "forgot.subtitle_email": "Saisissez votre e-mail et nous vous enverrons un code de vérification.",
+  "forgot.subtitle_code": "Saisissez le code envoyé par e-mail et choisissez un nouveau mot de passe.",
+  "forgot.send_code": "Envoyer le code",
+  "forgot.sending": "Envoi…",
+  "forgot.submit": "Réinitialiser le mot de passe",
+  "forgot.resetting": "Réinitialisation…",
+  "forgot.back_to_login": "Retour à la connexion",
+  "forgot.error": "Une erreur s'est produite. Veuillez réessayer."
 }

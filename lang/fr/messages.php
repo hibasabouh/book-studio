@@ -9,4 +9,7 @@ return [
     'google_invalid' => 'Le jeton Google est invalide ou a été émis pour une autre application.',
     'profile_updated' => 'Profil mis à jour.',
     'password_updated' => 'Mot de passe mis à jour.',
+    'account_not_found' => 'Aucun compte trouvé avec cette adresse e-mail.',
+    'password_reset_sent' => 'Nous avons envoyé un code de réinitialisation à votre e-mail.',
+    'password_reset_done' => 'Mot de passe réinitialisé. Veuillez vous connecter avec votre nouveau mot de passe.',
 ];

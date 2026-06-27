@@ -72,5 +72,15 @@
   "profile.avatar_subtitle": "Upload a JPG, PNG, or WebP (max 2 MB).",
   "profile.change_avatar": "Change photo",
   "profile.uploading": "Uploading…",
-  "profile.set_password": "Set password"
+  "profile.set_password": "Set password",
+  "forgot.link": "Forgot password?",
+  "forgot.title": "Reset your password",
+  "forgot.subtitle_email": "Enter your email and we'll send you a verification code.",
+  "forgot.subtitle_code": "Enter the code we emailed you and choose a new password.",
+  "forgot.send_code": "Send code",
+  "forgot.sending": "Sending…",
+  "forgot.submit": "Reset password",
+  "forgot.resetting": "Resetting…",
+  "forgot.back_to_login": "Back to sign in",
+  "forgot.error": "Something went wrong. Please try again."
 }

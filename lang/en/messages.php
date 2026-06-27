@@ -9,4 +9,7 @@ return [
     'google_invalid' => 'The Google token is invalid or was issued for another app.',
     'profile_updated' => 'Profile updated.',
     'password_updated' => 'Password updated.',
+    'account_not_found' => 'No account found with that email address.',
+    'password_reset_sent' => 'We sent a password reset code to your email.',
+    'password_reset_done' => 'Password reset. Please sign in with your new password.',
 ];

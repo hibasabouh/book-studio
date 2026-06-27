@@ -72,5 +72,15 @@
   "profile.avatar_subtitle": "ارفع صورة JPG أو PNG أو WebP (الحد الأقصى 2 ميجابايت).",
   "profile.change_avatar": "تغيير الصورة",
   "profile.uploading": "جارٍ الرفع…",
-  "profile.set_password": "تعيين كلمة المرور"
+  "profile.set_password": "تعيين كلمة المرور",
+  "forgot.link": "نسيت كلمة المرور؟",
+  "forgot.title": "إعادة تعيين كلمة المرور",
+  "forgot.subtitle_email": "أدخل بريدك الإلكتروني وسنرسل لك رمز تحقق.",
+  "forgot.subtitle_code": "أدخل الرمز الذي أرسلناه إليك واختر كلمة مرور جديدة.",
+  "forgot.send_code": "إرسال الرمز",
+  "forgot.sending": "جارٍ الإرسال…",
+  "forgot.submit": "إعادة تعيين كلمة المرور",
+  "forgot.resetting": "جارٍ إعادة التعيين…",
+  "forgot.back_to_login": "العودة إلى تسجيل الدخول",
+  "forgot.error": "حدث خطأ ما. حاول مرة أخرى."
 }

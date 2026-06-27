@@ -11,4 +11,13 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
+
+    // Email verification via OTP (operates on the authenticated user).
+    Route::post('/email/verify-otp', [AuthController::class, 'verifyEmail'])
+        ->middleware('throttle:6,1')
+        ->name('verification.verify');
+
+    Route::post('/email/resend-otp', [AuthController::class, 'resendOtp'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
 });

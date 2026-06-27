@@ -54,8 +54,8 @@
                             body: JSON.stringify(this.form),
                         });
                         window.auth.setToken(data.token);
-                        // TODO: redirect to /books once the library exists (Commit 10).
-                        window.location.href = '/';
+                        // New accounts are unverified — go enter the emailed OTP.
+                        window.location.href = '/email/verify';
                     } catch (e) {
                         if (e.status === 422) {
                             this.errors = e.data?.errors || {};

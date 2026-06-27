@@ -12,7 +12,7 @@
                 <div class="w-full border-t border-gray-200"></div>
             </div>
             <div class="relative flex justify-center text-xs uppercase tracking-wide">
-                <span class="bg-white px-2 text-gray-400">or continue with</span>
+                <span class="bg-white px-2 text-gray-400" x-text="$t('common.or_continue_with')">or continue with</span>
             </div>
         </div>
 
@@ -52,7 +52,7 @@
                     // TODO: redirect to /books once the library exists (Commit 10).
                     window.location.href = '/';
                 } catch (e) {
-                    alert(e.data?.message || 'Google sign-in failed. Please try again.');
+                    alert(e.data?.message || window.Alpine.store('i18n').t('google.error'));
                 }
             };
         </script>

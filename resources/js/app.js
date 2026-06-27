@@ -2,11 +2,36 @@ import './bootstrap';
 
 import Alpine from 'alpinejs';
 import { getToken, setToken, clearToken, fetchJson } from './auth';
+import { getLocale, setLocale, translate, isRtl, applyDir, SUPPORTED } from './i18n';
 
 window.Alpine = Alpine;
 
 // Expose the low-level helpers for inline Blade scripts that don't need the store.
 window.auth = { getToken, setToken, clearToken, fetchJson };
+
+/**
+ * Reactive UI locale. Components read text via the `$t` magic; changing
+ * `$store.i18n.locale` re-renders every binding, so language switches live.
+ */
+Alpine.store('i18n', {
+    locale: getLocale(),
+    supported: SUPPORTED,
+
+    get dir() {
+        return isRtl(this.locale) ? 'rtl' : 'ltr';
+    },
+
+    t(key) {
+        return translate(key, this.locale);
+    },
+
+    set(locale) {
+        setLocale(locale);
+        this.locale = locale;
+    },
+});
+
+Alpine.magic('t', () => (key) => Alpine.store('i18n').t(key));
 
 /**
  * Global, reactive auth state. Components read `$store.auth.check` to know if a
@@ -52,6 +77,7 @@ Alpine.store('auth', {
 });
 
 document.addEventListener('alpine:init', () => {
+    applyDir(getLocale());
     Alpine.store('auth').fetchUser();
 });
 

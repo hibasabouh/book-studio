@@ -1,13 +1,15 @@
 @props([
     'name',
-    'label',
+    'label' => null,    // static fallback label (used as SSR text)
+    'tkey' => null,      // i18n key; when set, the label is translated reactively via $t
     'type' => 'text',
     'model',            // Alpine x-model expression, e.g. "form.email"
     'error' => null,    // Alpine expression returning an error string, e.g. "fieldError('email')"
 ])
 
 <div>
-    <label for="{{ $name }}" class="block text-sm font-medium text-gray-700">{{ $label }}</label>
+    <label for="{{ $name }}" class="block text-sm font-medium text-gray-700"
+           @if ($tkey) x-text="$t('{{ $tkey }}')" @endif>{{ $label }}</label>
 
     <input
         id="{{ $name }}"

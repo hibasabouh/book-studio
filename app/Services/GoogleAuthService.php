@@ -36,7 +36,7 @@ class GoogleAuthService
 
         if (! $isValid) {
             throw ValidationException::withMessages([
-                'id_token' => ['The Google token is invalid or was issued for another app.'],
+                'id_token' => [__('messages.google_invalid')],
             ]);
         }
 

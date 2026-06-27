@@ -135,7 +135,7 @@ class AuthController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Logged out.']);
+        return response()->json(['message' => __('messages.logged_out')]);
     }
 
     /**
@@ -154,20 +154,20 @@ class AuthController extends Controller
         $user = $request->user();
 
         if ($user->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Email already verified.']);
+            return response()->json(['message' => __('messages.email_already_verified')]);
         }
 
         $verified = $otp->verify($user, OtpPurpose::Verify, $request->validated('code'));
 
         if (! $verified) {
-            return response()->json(['message' => 'The verification code is invalid or has expired.'], 422);
+            return response()->json(['message' => __('messages.otp_invalid')], 422);
         }
 
         $user->markEmailAsVerified();
         event(new Verified($user));
 
         return response()->json([
-            'message' => 'Email verified.',
+            'message' => __('messages.email_verified'),
             'user' => new UserResource($user),
         ]);
     }
@@ -180,12 +180,12 @@ class AuthController extends Controller
         $user = $request->user();
 
         if ($user->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Email already verified.']);
+            return response()->json(['message' => __('messages.email_already_verified')]);
         }
 
         $code = $otp->generate($user, OtpChannel::Email, OtpPurpose::Verify);
         $otp->send($user, OtpChannel::Email, $code);
 
-        return response()->json(['message' => 'A new verification code has been sent.']);
+        return response()->json(['message' => __('messages.otp_sent')]);
     }
 }

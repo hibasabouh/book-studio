@@ -85,6 +85,15 @@ return [
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
     /*
+    | Locales the app ships translations for. A requested locale is only honored
+    | if it appears here; anything else falls back to the default. 'rtl' locales
+    | render the UI right-to-left.
+    */
+    'supported_locales' => ['en', 'ar', 'fr'],
+
+    'rtl_locales' => ['ar'],
+
+    /*
     |--------------------------------------------------------------------------
     | Encryption Key
     |--------------------------------------------------------------------------

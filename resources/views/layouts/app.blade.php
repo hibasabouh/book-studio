@@ -6,6 +6,7 @@
 
     <title>{{ $title ?? config('app.name', 'Book Studio') }}</title>
 
+    @include('partials.locale-head')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
 </head>

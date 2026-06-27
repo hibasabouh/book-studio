@@ -16,7 +16,7 @@ class OtpMail extends Mailable
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Your Book Studio verification code');
+        return new Envelope(subject: __('otp.subject'));
     }
 
     public function content(): Content

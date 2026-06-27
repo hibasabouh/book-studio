@@ -7,6 +7,8 @@
  * presence/validity of the token, confirmed by `GET /api/user`.
  */
 
+import { getLocale } from './i18n';
+
 const TOKEN_KEY = 'book_studio_token';
 
 export function getToken() {
@@ -36,6 +38,7 @@ export function isAuthenticated() {
 export async function fetchJson(url, options = {}) {
     const headers = {
         Accept: 'application/json',
+        'X-Locale': getLocale(),
         ...(options.body ? { 'Content-Type': 'application/json' } : {}),
         ...(options.headers || {}),
     };

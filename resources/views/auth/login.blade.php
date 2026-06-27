@@ -3,8 +3,8 @@
 @section('content')
     <div x-data="loginForm()" class="space-y-6">
         <div>
-            <h2 class="text-xl font-semibold tracking-tight text-gray-900">Sign in to your account</h2>
-            <p class="mt-1 text-sm text-gray-500">Welcome back.</p>
+            <h2 class="text-xl font-semibold tracking-tight text-gray-900" x-text="$t('login.title')">Sign in to your account</h2>
+            <p class="mt-1 text-sm text-gray-500" x-text="$t('login.subtitle')">Welcome back.</p>
         </div>
 
         <template x-if="error">
@@ -12,21 +12,21 @@
         </template>
 
         <form @submit.prevent="submit" class="space-y-4">
-            <x-input-field name="email" label="Email" type="email" model="form.email" required autocomplete="email" />
+            <x-input-field name="email" tkey="field.email" label="Email" type="email" model="form.email" required autocomplete="email" />
 
-            <x-input-field name="password" label="Password" type="password" model="form.password" required autocomplete="current-password" />
+            <x-input-field name="password" tkey="field.password" label="Password" type="password" model="form.password" required autocomplete="current-password" />
 
             <button type="submit" :disabled="loading"
                     class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50">
-                <span x-text="loading ? 'Signing in…' : 'Sign in'"></span>
+                <span x-text="loading ? $t('login.submitting') : $t('login.submit')"></span>
             </button>
         </form>
 
         <x-google-auth-button />
 
         <p class="text-center text-sm text-gray-500">
-            No account?
-            <a href="/register" class="font-medium text-indigo-600 hover:text-indigo-500">Create one</a>
+            <span x-text="$t('login.no_account')"></span>
+            <a href="/register" class="font-medium text-indigo-600 hover:text-indigo-500" x-text="$t('login.create_one')"></a>
         </p>
     </div>
 @endsection
@@ -50,7 +50,7 @@
                         // TODO: redirect to /books once the library exists (Commit 10).
                         window.location.href = '/';
                     } catch (e) {
-                        this.error = e.data?.message || 'Unable to sign in. Please try again.';
+                        this.error = e.data?.message || this.$store.i18n.t('login.error');
                     } finally {
                         this.loading = false;
                     }

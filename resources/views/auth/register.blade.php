@@ -3,8 +3,8 @@
 @section('content')
     <div x-data="registerForm()" class="space-y-6">
         <div>
-            <h2 class="text-xl font-semibold tracking-tight text-gray-900">Create your account</h2>
-            <p class="mt-1 text-sm text-gray-500">Start building your books.</p>
+            <h2 class="text-xl font-semibold tracking-tight text-gray-900" x-text="$t('register.title')">Create your account</h2>
+            <p class="mt-1 text-sm text-gray-500" x-text="$t('register.subtitle')">Start building your books.</p>
         </div>
 
         <template x-if="error">
@@ -12,25 +12,25 @@
         </template>
 
         <form @submit.prevent="submit" class="space-y-4">
-            <x-input-field name="name" label="Name" model="form.name" error="fieldError('name')" required autocomplete="name" />
+            <x-input-field name="name" tkey="field.name" label="Name" model="form.name" error="fieldError('name')" required autocomplete="name" />
 
-            <x-input-field name="email" label="Email" type="email" model="form.email" error="fieldError('email')" required autocomplete="email" />
+            <x-input-field name="email" tkey="field.email" label="Email" type="email" model="form.email" error="fieldError('email')" required autocomplete="email" />
 
-            <x-input-field name="password" label="Password" type="password" model="form.password" error="fieldError('password')" required autocomplete="new-password" />
+            <x-input-field name="password" tkey="field.password" label="Password" type="password" model="form.password" error="fieldError('password')" required autocomplete="new-password" />
 
-            <x-input-field name="password_confirmation" label="Confirm password" type="password" model="form.password_confirmation" required autocomplete="new-password" />
+            <x-input-field name="password_confirmation" tkey="field.confirm_password" label="Confirm password" type="password" model="form.password_confirmation" required autocomplete="new-password" />
 
             <button type="submit" :disabled="loading"
                     class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50">
-                <span x-text="loading ? 'Creating account…' : 'Create account'"></span>
+                <span x-text="loading ? $t('register.submitting') : $t('register.submit')"></span>
             </button>
         </form>
 
         <x-google-auth-button />
 
         <p class="text-center text-sm text-gray-500">
-            Already have an account?
-            <a href="/login" class="font-medium text-indigo-600 hover:text-indigo-500">Sign in</a>
+            <span x-text="$t('register.have_account')"></span>
+            <a href="/login" class="font-medium text-indigo-600 hover:text-indigo-500" x-text="$t('register.sign_in')"></a>
         </p>
     </div>
 @endsection
@@ -61,9 +61,9 @@
                     } catch (e) {
                         if (e.status === 422) {
                             this.errors = e.data?.errors || {};
-                            this.error = e.data?.message || 'Please fix the errors below.';
+                            this.error = e.data?.message || this.$store.i18n.t('register.error');
                         } else {
-                            this.error = e.data?.message || 'Unable to register. Please try again.';
+                            this.error = e.data?.message || this.$store.i18n.t('register.error');
                         }
                     } finally {
                         this.loading = false;

@@ -3,8 +3,8 @@
 @section('content')
     <div x-data="verifyEmail()" class="space-y-6">
         <div>
-            <h2 class="text-xl font-semibold tracking-tight text-gray-900">Verify your email</h2>
-            <p class="mt-1 text-sm text-gray-500">
+            <h2 class="text-xl font-semibold tracking-tight text-gray-900" x-text="$t('verify.title')">Verify your email</h2>
+            <p class="mt-1 text-sm text-gray-500" x-text="$t('verify.subtitle')">
                 We emailed you a 6-digit verification code. Enter it below to activate your account.
             </p>
         </div>
@@ -16,18 +16,18 @@
         </template>
 
         <form @submit.prevent="submit" class="space-y-4">
-            <x-input-field name="code" label="Verification code" model="form.code"
+            <x-input-field name="code" tkey="field.code" label="Verification code" model="form.code"
                            inputmode="numeric" autocomplete="one-time-code" maxlength="6" required />
 
             <button type="submit" :disabled="loading"
                     class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50">
-                <span x-text="loading ? 'Verifying…' : 'Verify email'"></span>
+                <span x-text="loading ? $t('verify.submitting') : $t('verify.submit')"></span>
             </button>
         </form>
 
         <button type="button" @click="resend" :disabled="loading"
-                class="text-sm font-medium text-indigo-600 hover:text-indigo-500 disabled:opacity-50">
-            Didn't get a code? Resend
+                class="text-sm font-medium text-indigo-600 hover:text-indigo-500 disabled:opacity-50"
+                x-text="$t('verify.resend')">
         </button>
     </div>
 @endsection
@@ -54,7 +54,7 @@
                         setTimeout(() => (window.location.href = '/'), 800);
                     } catch (e) {
                         this.ok = false;
-                        this.message = e.data?.message || 'Verification failed. Please try again.';
+                        this.message = e.data?.message || this.$store.i18n.t('verify.error');
                     } finally {
                         this.loading = false;
                     }

@@ -22,6 +22,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
         ]);
 
+        // Resolve the request locale (en/ar/fr) from the X-Locale header.
+        $middleware->web(prepend: [\App\Http\Middleware\SetLocale::class]);
+        $middleware->api(prepend: [\App\Http\Middleware\SetLocale::class]);
+
         $middleware->alias([
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);

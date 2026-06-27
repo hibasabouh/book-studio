@@ -26,6 +26,8 @@
             </button>
         </form>
 
+        <x-google-auth-button />
+
         <p class="text-center text-sm text-gray-500">
             Already have an account?
             <a href="/login" class="font-medium text-indigo-600 hover:text-indigo-500">Sign in</a>

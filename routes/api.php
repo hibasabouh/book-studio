@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 // Public, token-issuing auth endpoints (consumed by web fetch and mobile alike).
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/auth/google', [AuthController::class, 'google']);
 
 // Token-protected endpoints.
 Route::middleware('auth:sanctum')->group(function () {

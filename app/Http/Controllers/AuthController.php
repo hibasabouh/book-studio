@@ -5,17 +5,20 @@ namespace App\Http\Controllers;
 use App\Enums\OtpChannel;
 use App\Enums\OtpPurpose;
 use App\Enums\Role;
+use App\Http\Requests\GoogleAuthRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\VerifyOtpRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\GoogleAuthService;
 use App\Services\OtpService;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -81,6 +84,43 @@ class AuthController extends Controller
                 'email' => [__('auth.failed')],
             ]);
         }
+
+        return response()->json([
+            'token' => $user->createToken('web')->plainTextToken,
+            'user' => new UserResource($user),
+        ]);
+    }
+
+    /**
+     * Sign in (or register) with a Google ID token.
+     *
+     * The same endpoint serves web and mobile: each obtains an ID token from
+     * Google client-side and POSTs it here. The token is verified server-side,
+     * then the user is found by email (linking google_id if needed) or created.
+     * Google emails are pre-verified, so no OTP is required.
+     */
+    public function google(GoogleAuthRequest $request, GoogleAuthService $google): JsonResponse
+    {
+        $claims = $google->verify($request->validated('id_token'));
+
+        $user = User::where('email', $claims['email'])->first();
+
+        if (! $user) {
+            $user = new User();
+            $user->name = $claims['name'];
+            $user->email = $claims['email'];
+            $user->password = Str::random(40); // unusable placeholder; they sign in via Google
+            $user->role = Role::User;
+        }
+
+        $user->google_id ??= $claims['google_id'];
+        $user->avatar ??= $claims['avatar'];
+
+        if (! $user->email_verified_at && $claims['email_verified']) {
+            $user->email_verified_at = now();
+        }
+
+        $user->save();
 
         return response()->json([
             'token' => $user->createToken('web')->plainTextToken,

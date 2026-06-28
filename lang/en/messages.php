@@ -12,4 +12,5 @@ return [
     'account_not_found' => 'No account found with that email address.',
     'password_reset_sent' => 'We sent a password reset code to your email.',
     'password_reset_done' => 'Password reset. Please sign in with your new password.',
+    'book_deleted' => 'Book deleted.',
 ];

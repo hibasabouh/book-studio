@@ -82,5 +82,21 @@
   "forgot.submit": "إعادة تعيين كلمة المرور",
   "forgot.resetting": "جارٍ إعادة التعيين…",
   "forgot.back_to_login": "العودة إلى تسجيل الدخول",
-  "forgot.error": "حدث خطأ ما. حاول مرة أخرى."
+  "forgot.error": "حدث خطأ ما. حاول مرة أخرى.",
+  "books.title": "المكتبة",
+  "books.new": "كتاب جديد",
+  "books.empty": "لا توجد كتب بعد. أنشئ أول كتاب لك.",
+  "books.create_title": "كتاب جديد",
+  "books.edit_title": "تعديل الكتاب",
+  "books.field_title": "العنوان",
+  "books.field_description": "الوصف",
+  "books.save": "حفظ",
+  "books.saving": "جارٍ الحفظ…",
+  "books.cancel": "إلغاء",
+  "books.open": "فتح",
+  "books.edit": "تعديل",
+  "books.delete": "حذف",
+  "books.confirm_delete": "حذف هذا الكتاب وجميع فصوله؟",
+  "books.chapters_count": "فصول",
+  "books.error": "حدث خطأ ما. حاول مرة أخرى."
 }

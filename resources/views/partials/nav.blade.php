@@ -13,6 +13,7 @@
 
                 <div class="hidden items-center gap-4 sm:flex" x-show="$store.auth.check">
                     <a href="/dashboard" class="text-sm font-medium text-gray-600 hover:text-gray-900" x-text="$t('nav.dashboard')"></a>
+                    <a href="/books" class="text-sm font-medium text-gray-600 hover:text-gray-900" x-text="$t('nav.library')"></a>
                     <a href="/admin" x-show="$store.auth.user?.role === 'admin'"
                        class="text-sm font-medium text-gray-600 hover:text-gray-900" x-text="$t('nav.admin')"></a>
                 </div>

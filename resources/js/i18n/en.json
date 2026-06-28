@@ -82,5 +82,21 @@
   "forgot.submit": "Reset password",
   "forgot.resetting": "Resetting…",
   "forgot.back_to_login": "Back to sign in",
-  "forgot.error": "Something went wrong. Please try again."
+  "forgot.error": "Something went wrong. Please try again.",
+  "books.title": "Library",
+  "books.new": "New book",
+  "books.empty": "No books yet. Create your first one.",
+  "books.create_title": "New book",
+  "books.edit_title": "Edit book",
+  "books.field_title": "Title",
+  "books.field_description": "Description",
+  "books.save": "Save",
+  "books.saving": "Saving…",
+  "books.cancel": "Cancel",
+  "books.open": "Open",
+  "books.edit": "Edit",
+  "books.delete": "Delete",
+  "books.confirm_delete": "Delete this book and all its chapters?",
+  "books.chapters_count": "chapters",
+  "books.error": "Something went wrong. Please try again."
 }

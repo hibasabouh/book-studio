@@ -82,5 +82,21 @@
   "forgot.submit": "Réinitialiser le mot de passe",
   "forgot.resetting": "Réinitialisation…",
   "forgot.back_to_login": "Retour à la connexion",
-  "forgot.error": "Une erreur s'est produite. Veuillez réessayer."
+  "forgot.error": "Une erreur s'est produite. Veuillez réessayer.",
+  "books.title": "Bibliothèque",
+  "books.new": "Nouveau livre",
+  "books.empty": "Aucun livre pour le moment. Créez votre premier.",
+  "books.create_title": "Nouveau livre",
+  "books.edit_title": "Modifier le livre",
+  "books.field_title": "Titre",
+  "books.field_description": "Description",
+  "books.save": "Enregistrer",
+  "books.saving": "Enregistrement…",
+  "books.cancel": "Annuler",
+  "books.open": "Ouvrir",
+  "books.edit": "Modifier",
+  "books.delete": "Supprimer",
+  "books.confirm_delete": "Supprimer ce livre et tous ses chapitres ?",
+  "books.chapters_count": "chapitres",
+  "books.error": "Une erreur s'est produite. Veuillez réessayer."
 }

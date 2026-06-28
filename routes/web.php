@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -21,7 +22,10 @@ Route::get('/email/verify', [AuthController::class, 'showVerifyEmail'])->name('v
 // Forgot/reset password page (two-step: email → code + new password).
 Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
 
-// Authenticated page shells (auth enforced client-side; data via /api).
-Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+// Authenticated page shells (auth enforced server-side; data via /api).
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/books', [BookController::class, 'index'])->name('books.library');
+});

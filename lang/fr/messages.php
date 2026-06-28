@@ -12,4 +12,5 @@ return [
     'account_not_found' => 'Aucun compte trouvé avec cette adresse e-mail.',
     'password_reset_sent' => 'Nous avons envoyé un code de réinitialisation à votre e-mail.',
     'password_reset_done' => 'Mot de passe réinitialisé. Veuillez vous connecter avec votre nouveau mot de passe.',
+    'book_deleted' => 'Livre supprimé.',
 ];

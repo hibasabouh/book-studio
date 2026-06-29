@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\BookFont;
+use App\Enums\BookLanguage;
 use App\Enums\PdfTemplate;
 use App\Enums\TextDirection;
 use App\Models\Book;
@@ -22,6 +23,7 @@ class BookSettingFactory extends Factory
             'arabic_font' => BookFont::Amiri,
             'heading_font' => BookFont::PlayfairDisplay,
             'text_direction' => TextDirection::Ltr,
+            'language' => BookLanguage::En,
             'font_size' => 12.0,
             'chapter_header_font_size' => 18.0,
             'line_height' => 1.5,
@@ -42,6 +44,7 @@ class BookSettingFactory extends Factory
             'template' => PdfTemplate::Arabic,
             'heading_font' => BookFont::Amiri,
             'text_direction' => TextDirection::Rtl,
+            'language' => BookLanguage::Ar,
         ]);
     }
 }

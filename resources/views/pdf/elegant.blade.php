@@ -147,7 +147,7 @@ body {
 @if($setting->show_table_of_contents && $chapters->isNotEmpty())
 <div style="page-break-before: always;">
     <div class="toc-ornament">&#10022; &#10022; &#10022;</div>
-    <div class="toc-title">{{ $isRtl ? 'جدول المحتويات' : 'Table of Contents' }}</div>
+    <div class="toc-title">{{ $labels['toc'] }}</div>
     <div class="toc-rule"></div>
     <ol class="toc-list">
         @foreach($chapters as $chapter)

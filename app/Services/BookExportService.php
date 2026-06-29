@@ -15,6 +15,7 @@ class BookExportService
     {
         $setting = $book->setting;
         $isRtl = $setting->text_direction->isRtl();
+        $labels = $setting->language->templateLabels();
 
         $bodyFont = $isRtl
             ? $setting->arabic_font->mpdfFamily()
@@ -51,6 +52,7 @@ class BookExportService
             'chapters' => $book->chapters,
             'setting' => $setting,
             'isRtl' => $isRtl,
+            'labels' => $labels,
             'bodyFont' => $bodyFont,
             'headingFont' => $headingFont,
         ])->render();

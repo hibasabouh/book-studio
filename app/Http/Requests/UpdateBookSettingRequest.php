@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\BookFont;
+use App\Enums\BookLanguage;
 use App\Enums\PdfTemplate;
 use App\Enums\TextDirection;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,6 +27,7 @@ class UpdateBookSettingRequest extends FormRequest
             'arabic_font'              => ['sometimes', Rule::enum(BookFont::class)],
             'heading_font'             => ['sometimes', Rule::enum(BookFont::class)],
             'text_direction'           => ['sometimes', Rule::enum(TextDirection::class)],
+            'language'                 => ['sometimes', Rule::enum(BookLanguage::class)],
             'font_size'                => ['sometimes', 'numeric', 'min:8', 'max:72'],
             'chapter_header_font_size' => ['sometimes', 'numeric', 'min:8', 'max:72'],
             'line_height'              => ['sometimes', 'numeric', 'min:1', 'max:3'],

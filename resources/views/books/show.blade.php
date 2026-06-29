@@ -107,7 +107,7 @@
                         <section>
                             <h3 class="mb-3 text-xs font-medium uppercase tracking-wide text-gray-500" x-text="$t('settings.section_layout')"></h3>
                             <div class="space-y-4 rounded-lg bg-white p-4 ring-1 ring-gray-200">
-                                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_template')"></label>
                                         <select x-model="settingsForm.template"
@@ -115,6 +115,15 @@
                                             <template x-for="opt in templates" :key="opt.value">
                                                 <option :value="opt.value" x-text="opt.label"></option>
                                             </template>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_language')"></label>
+                                        <select x-model="settingsForm.language"
+                                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                            <option value="en" x-text="$t('settings.language_en')"></option>
+                                            <option value="ar" x-text="$t('settings.language_ar')"></option>
+                                            <option value="fr" x-text="$t('settings.language_fr')"></option>
                                         </select>
                                     </div>
                                     <div>

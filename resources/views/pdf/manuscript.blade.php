@@ -91,17 +91,17 @@ body {
         <p class="cover-subtitle">{{ $setting->subtitle }}</p>
     @endif
     @if($setting->author)
-        <p class="cover-meta">{{ $isRtl ? 'المؤلف:' : 'Author:' }} {{ $setting->author }}</p>
+        <p class="cover-meta">{{ $labels['author'] }} {{ $setting->author }}</p>
     @endif
     <p class="cover-meta" style="margin-top: 30px;">
-        {{ $isRtl ? 'عدد الفصول:' : 'Chapters:' }} {{ $chapters->count() }}
+        {{ $labels['chapters_count'] }} {{ $chapters->count() }}
     </p>
 </div>
 
 {{-- Table of Contents --}}
 @if($setting->show_table_of_contents && $chapters->isNotEmpty())
 <div style="page-break-before: always;">
-    <div class="toc-title">{{ $isRtl ? 'جدول المحتويات' : 'CONTENTS' }}</div>
+    <div class="toc-title">{{ $labels['contents'] }}</div>
     <ul class="toc-list">
         @foreach($chapters as $i => $chapter)
             <li>
@@ -117,7 +117,7 @@ body {
 <div style="page-break-before: always;">
     @if($setting->show_chapter_headers)
         <div class="chapter-label">
-            {{ $isRtl ? 'الفصل' : 'CHAPTER' }} {{ $i + 1 }}
+            {{ $labels['chapter_label'] }} {{ $i + 1 }}
         </div>
         <div class="chapter-title">{{ $chapter->title }}</div>
     @endif

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\BookFont;
+use App\Enums\BookLanguage;
 use App\Enums\PdfTemplate;
 use App\Enums\TextDirection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,6 +21,7 @@ class BookSetting extends Model
         'arabic_font',
         'heading_font',
         'text_direction',
+        'language',
         'font_size',
         'chapter_header_font_size',
         'line_height',
@@ -38,6 +40,7 @@ class BookSetting extends Model
             'arabic_font' => BookFont::class,
             'heading_font' => BookFont::class,
             'text_direction' => TextDirection::class,
+            'language' => BookLanguage::class,
             'font_size' => 'float',
             'chapter_header_font_size' => 'float',
             'line_height' => 'float',

@@ -103,7 +103,7 @@ body {
 {{-- Table of Contents --}}
 @if($setting->show_table_of_contents && $chapters->isNotEmpty())
 <div style="page-break-before: always;">
-    <div class="toc-title">{{ $isRtl ? 'جدول المحتويات' : 'Table of Contents' }}</div>
+    <div class="toc-title">{{ $labels['toc'] }}</div>
     <ul class="toc-list">
         @foreach($chapters as $i => $chapter)
             <li>
@@ -119,7 +119,7 @@ body {
 <div style="page-break-before: always;">
     @if($setting->show_chapter_headers)
         <div class="chapter-header">
-            <div class="chapter-number">{{ $isRtl ? 'الفصل' : 'Chapter' }} {{ $i + 1 }}</div>
+            <div class="chapter-number">{{ $labels['chapter'] }} {{ $i + 1 }}</div>
             <div class="chapter-title">{{ $chapter->title }}</div>
         </div>
     @endif

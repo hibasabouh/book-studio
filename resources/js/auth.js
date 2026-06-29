@@ -17,10 +17,13 @@ export function getToken() {
 
 export function setToken(token) {
     localStorage.setItem(TOKEN_KEY, token);
+    // Mirror in a plain cookie so the server-side web.auth middleware can validate it.
+    document.cookie = `${TOKEN_KEY}=${token}; path=/; max-age=31536000; SameSite=Lax`;
 }
 
 export function clearToken() {
     localStorage.removeItem(TOKEN_KEY);
+    document.cookie = `${TOKEN_KEY}=; path=/; max-age=0; SameSite=Lax`;
 }
 
 export function isAuthenticated() {

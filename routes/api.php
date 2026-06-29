@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // Admin-only data.
     Route::get('/admin/stats', [AdminController::class, 'stats'])->middleware('can:admin');
 
-    // Books mangement
+    // Books management
     Route::apiResource('books', BookController::class);
+
+    // Chapters management (shallow: index/store nested, show/update/destroy flat)
+    Route::post('books/{book}/chapters/reorder', [ChapterController::class, 'reorder']);
+    Route::apiResource('books.chapters', ChapterController::class)->shallow();
 });

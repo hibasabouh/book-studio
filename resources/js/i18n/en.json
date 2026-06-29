@@ -98,5 +98,14 @@
   "books.delete": "Delete",
   "books.confirm_delete": "Delete this book and all its chapters?",
   "books.chapters_count": "chapters",
-  "books.error": "Something went wrong. Please try again."
+  "books.error": "Something went wrong. Please try again.",
+  "chapters.add": "Add chapter",
+  "chapters.empty": "No chapters yet. Add your first one.",
+  "chapters.no_selection": "Select a chapter from the list to start editing.",
+  "chapters.field_title": "Chapter title",
+  "chapters.field_content": "Content",
+  "chapters.save": "Save",
+  "chapters.saving": "Saving…",
+  "chapters.confirm_delete": "Delete this chapter?",
+  "chapters.error": "Something went wrong. Please try again."
 }

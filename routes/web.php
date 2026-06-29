@@ -22,10 +22,11 @@ Route::get('/email/verify', [AuthController::class, 'showVerifyEmail'])->name('v
 // Forgot/reset password page (two-step: email → code + new password).
 Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
 
-// Authenticated page shells (auth enforced server-side; data via /api).
-Route::middleware('auth')->group(function () {
+// Authenticated page shells — cookie validated server-side; data fetched via /api with bearer token.
+Route::middleware('web.auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/books', [BookController::class, 'index'])->name('books.library');
+    Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
 });

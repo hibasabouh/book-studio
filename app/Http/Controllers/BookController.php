@@ -51,8 +51,12 @@ class BookController extends Controller
             ->setStatusCode(201);
     }
 
-    public function show(ShowBookRequest $request, Book $book): BookResource
+    public function show(ShowBookRequest $request, Book $book): BookResource|View
     {
+        if (! $request->expectsJson()) {
+            return view('books.show', ['book' => $book]);
+        }
+
         return new BookResource($book->loadCount('chapters'));
     }
 

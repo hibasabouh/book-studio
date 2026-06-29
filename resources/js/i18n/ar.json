@@ -98,5 +98,14 @@
   "books.delete": "حذف",
   "books.confirm_delete": "حذف هذا الكتاب وجميع فصوله؟",
   "books.chapters_count": "فصول",
-  "books.error": "حدث خطأ ما. حاول مرة أخرى."
+  "books.error": "حدث خطأ ما. حاول مرة أخرى.",
+  "chapters.add": "إضافة فصل",
+  "chapters.empty": "لا توجد فصول بعد. أضف أول فصل لك.",
+  "chapters.no_selection": "اختر فصلاً من القائمة لبدء التحرير.",
+  "chapters.field_title": "عنوان الفصل",
+  "chapters.field_content": "المحتوى",
+  "chapters.save": "حفظ",
+  "chapters.saving": "جارٍ الحفظ…",
+  "chapters.confirm_delete": "حذف هذا الفصل؟",
+  "chapters.error": "حدث خطأ ما. حاول مرة أخرى."
 }

@@ -16,6 +16,11 @@ class ChapterPolicy
         return $user->isAdmin() ? true : null;
     }
 
+    public function viewAny(User $user, Book $book): bool
+    {
+        return $user->id === $book->user_id;
+    }
+
     public function view(User $user, Chapter $chapter): bool
     {
         return $user->id === $chapter->book->user_id;

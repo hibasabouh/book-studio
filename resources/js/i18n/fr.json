@@ -98,5 +98,14 @@
   "books.delete": "Supprimer",
   "books.confirm_delete": "Supprimer ce livre et tous ses chapitres ?",
   "books.chapters_count": "chapitres",
-  "books.error": "Une erreur s'est produite. Veuillez réessayer."
+  "books.error": "Une erreur s'est produite. Veuillez réessayer.",
+  "chapters.add": "Ajouter un chapitre",
+  "chapters.empty": "Aucun chapitre pour l'instant. Ajoutez le premier.",
+  "chapters.no_selection": "Sélectionnez un chapitre dans la liste pour commencer à éditer.",
+  "chapters.field_title": "Titre du chapitre",
+  "chapters.field_content": "Contenu",
+  "chapters.save": "Enregistrer",
+  "chapters.saving": "Enregistrement…",
+  "chapters.confirm_delete": "Supprimer ce chapitre ?",
+  "chapters.error": "Une erreur s'est produite. Veuillez réessayer."
 }

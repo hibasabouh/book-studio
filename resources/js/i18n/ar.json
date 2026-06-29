@@ -131,7 +131,6 @@
   "settings.section_typography": "الطباعة",
   "settings.field_latin_font": "خط لاتيني",
   "settings.field_arabic_font": "خط عربي",
-  "settings.field_heading_font": "خط العناوين",
   "settings.field_font_size": "حجم الخط (نقطة)",
   "settings.field_chapter_header_font_size": "حجم عنوان الفصل (نقطة)",
   "settings.field_line_height": "تباعد الأسطر",

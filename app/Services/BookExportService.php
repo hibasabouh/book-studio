@@ -2,7 +2,11 @@
 
 namespace App\Services;
 
+use App\Enums\BookFont;
 use App\Models\Book;
+use App\Support\ScriptFontFormatter;
+use Mpdf\Config\ConfigVariables;
+use Mpdf\Config\FontVariables;
 use Mpdf\Mpdf;
 use Mpdf\MpdfException;
 
@@ -17,11 +21,18 @@ class BookExportService
         $isRtl = $setting->text_direction->isRtl();
         $labels = $setting->language->templateLabels();
 
-        $bodyFont = $isRtl
+        $bodyFont = $setting->language->isArabic()
             ? $setting->arabic_font->mpdfFamily()
             : $setting->latin_font->mpdfFamily();
 
-        $headingFont = $setting->heading_font->mpdfFamily();
+        $fmt = new ScriptFontFormatter(
+            $setting->latin_font,
+            $setting->arabic_font,
+            $setting->language->isArabic(),
+        );
+
+        $defaultConfig = (new ConfigVariables())->getDefaults();
+        $defaultFontConfig = (new FontVariables())->getDefaults();
 
         $mpdf = new Mpdf([
             'mode' => 'utf-8',
@@ -34,6 +45,8 @@ class BookExportService
             'margin_bottom' => 25,
             'margin_footer' => 10,
             'tempDir' => sys_get_temp_dir().'/mpdf',
+            'fontDir' => array_merge($defaultConfig['fontDir'], [storage_path('fonts')]),
+            'fontdata' => $defaultFontConfig['fontdata'] + BookFont::mpdfFontData(),
         ]);
 
         if ($isRtl) {
@@ -54,7 +67,7 @@ class BookExportService
             'isRtl' => $isRtl,
             'labels' => $labels,
             'bodyFont' => $bodyFont,
-            'headingFont' => $headingFont,
+            'fmt' => $fmt,
         ])->render();
 
         $mpdf->WriteHTML($html);

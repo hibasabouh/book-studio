@@ -156,7 +156,7 @@
                         <section>
                             <h3 class="mb-3 text-xs font-medium uppercase tracking-wide text-gray-500" x-text="$t('settings.section_typography')"></h3>
                             <div class="space-y-4 rounded-lg bg-white p-4 ring-1 ring-gray-200">
-                                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_latin_font')"></label>
                                         <select x-model="settingsForm.latin_font"
@@ -171,15 +171,6 @@
                                         <select x-model="settingsForm.arabic_font"
                                                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                             <template x-for="f in arabicFonts" :key="f.value">
-                                                <option :value="f.value" x-text="f.label"></option>
-                                            </template>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_heading_font')"></label>
-                                        <select x-model="settingsForm.heading_font"
-                                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                            <template x-for="f in allFonts" :key="f.value">
                                                 <option :value="f.value" x-text="f.label"></option>
                                             </template>
                                         </select>
@@ -295,10 +286,6 @@
                     { value: 'lateef',             label: 'Lateef' },
                     { value: 'reem_kufi',          label: 'Reem Kufi' },
                 ],
-                get allFonts() {
-                    return [...this.latinFonts, ...this.arabicFonts];
-                },
-
                 init() {
                     this.$watch('$store.auth.ready', () => this.guard());
                     this.guard();

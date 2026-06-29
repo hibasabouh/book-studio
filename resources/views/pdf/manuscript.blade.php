@@ -19,7 +19,7 @@ body {
     text-align: {{ $isRtl ? 'right' : 'left' }};
 }
 .cover-title {
-    font-family: {{ $headingFont }};
+    font-family: {{ $bodyFont }};
     font-size: 22pt;
     font-weight: bold;
     color: #111;
@@ -38,7 +38,7 @@ body {
 
 /* ── Table of Contents ── */
 .toc-title {
-    font-family: {{ $headingFont }};
+    font-family: {{ $bodyFont }};
     font-size: {{ $setting->chapter_header_font_size }}pt;
     font-weight: bold;
     text-align: {{ $isRtl ? 'right' : 'left' }};
@@ -67,7 +67,7 @@ body {
     text-align: {{ $isRtl ? 'right' : 'left' }};
 }
 .chapter-title {
-    font-family: {{ $headingFont }};
+    font-family: {{ $bodyFont }};
     font-size: {{ $setting->chapter_header_font_size }}pt;
     font-weight: bold;
     text-align: {{ $isRtl ? 'right' : 'left' }};
@@ -86,12 +86,12 @@ body {
 
 {{-- Cover --}}
 <div class="cover">
-    <p class="cover-title">{{ $book->title }}</p>
+    <p class="cover-title">{!! $fmt->inline($book->title) !!}</p>
     @if($setting->subtitle)
-        <p class="cover-subtitle">{{ $setting->subtitle }}</p>
+        <p class="cover-subtitle">{!! $fmt->inline($setting->subtitle) !!}</p>
     @endif
     @if($setting->author)
-        <p class="cover-meta">{{ $labels['author'] }} {{ $setting->author }}</p>
+        <p class="cover-meta">{{ $labels['author'] }} {!! $fmt->inline($setting->author) !!}</p>
     @endif
     <p class="cover-meta" style="margin-top: 30px;">
         {{ $labels['chapters_count'] }} {{ $chapters->count() }}
@@ -105,7 +105,7 @@ body {
     <ul class="toc-list">
         @foreach($chapters as $i => $chapter)
             <li>
-                <span class="toc-dot">{{ $i + 1 }}.</span>{{ $chapter->title }}
+                <span class="toc-dot">{{ $i + 1 }}.</span>{!! $fmt->inline($chapter->title) !!}
             </li>
         @endforeach
     </ul>
@@ -119,9 +119,9 @@ body {
         <div class="chapter-label">
             {{ $labels['chapter_label'] }} {{ $i + 1 }}
         </div>
-        <div class="chapter-title">{{ $chapter->title }}</div>
+        <div class="chapter-title">{!! $fmt->inline($chapter->title) !!}</div>
     @endif
-    <div class="chapter-body">{{ $chapter->content }}</div>
+    <div class="chapter-body">{!! $fmt->block($chapter->content) !!}</div>
 </div>
 @endforeach
 

@@ -131,7 +131,6 @@
   "settings.section_typography": "Typographie",
   "settings.field_latin_font": "Police latine",
   "settings.field_arabic_font": "Police arabe",
-  "settings.field_heading_font": "Police des titres",
   "settings.field_font_size": "Taille de police (pt)",
   "settings.field_chapter_header_font_size": "Taille titre de chapitre (pt)",
   "settings.field_line_height": "Interligne",

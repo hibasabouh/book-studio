@@ -21,7 +21,6 @@ class BookSettingFactory extends Factory
             'template' => PdfTemplate::Classic,
             'latin_font' => BookFont::EbGaramond,
             'arabic_font' => BookFont::Amiri,
-            'heading_font' => BookFont::PlayfairDisplay,
             'text_direction' => TextDirection::Ltr,
             'language' => BookLanguage::En,
             'font_size' => 12.0,
@@ -36,13 +35,12 @@ class BookSettingFactory extends Factory
     }
 
     /**
-     * RTL Arabic preset (Arabic template, RTL direction, Amiri headings).
+     * RTL Arabic preset (Arabic font, RTL direction, Arabic language).
      */
     public function arabic(): static
     {
         return $this->state(fn () => [
-            'template' => PdfTemplate::Arabic,
-            'heading_font' => BookFont::Amiri,
+            'arabic_font' => BookFont::Amiri,
             'text_direction' => TextDirection::Rtl,
             'language' => BookLanguage::Ar,
         ]);

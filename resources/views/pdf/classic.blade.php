@@ -19,7 +19,7 @@ body {
     padding-top: 90px;
 }
 .cover-title {
-    font-family: {{ $headingFont }};
+    font-family: {{ $bodyFont }};
     font-size: 26pt;
     font-weight: bold;
     color: #111;
@@ -45,7 +45,7 @@ body {
 
 /* ── Table of Contents ── */
 .toc-title {
-    font-family: {{ $headingFont }};
+    font-family: {{ $bodyFont }};
     font-size: {{ $setting->chapter_header_font_size }}pt;
     font-weight: bold;
     text-align: {{ $isRtl ? 'right' : 'left' }};
@@ -64,7 +64,7 @@ body {
 
 /* ── Chapter ── */
 .chapter-title {
-    font-family: {{ $headingFont }};
+    font-family: {{ $bodyFont }};
     font-size: {{ $setting->chapter_header_font_size }}pt;
     font-weight: bold;
     text-align: center;
@@ -83,13 +83,13 @@ body {
 
 {{-- Cover --}}
 <div class="cover">
-    <p class="cover-title">{{ $book->title }}</p>
+    <p class="cover-title">{!! $fmt->inline($book->title) !!}</p>
     @if($setting->subtitle)
-        <p class="cover-subtitle">{{ $setting->subtitle }}</p>
+        <p class="cover-subtitle">{!! $fmt->inline($setting->subtitle) !!}</p>
     @endif
     <div class="cover-divider"></div>
     @if($setting->author)
-        <p class="cover-author">{{ $setting->author }}</p>
+        <p class="cover-author">{!! $fmt->inline($setting->author) !!}</p>
     @endif
 </div>
 
@@ -99,7 +99,7 @@ body {
     <div class="toc-title">{{ $labels['toc'] }}</div>
     <ol class="toc-list">
         @foreach($chapters as $chapter)
-            <li>{{ $chapter->title }}</li>
+            <li>{!! $fmt->inline($chapter->title) !!}</li>
         @endforeach
     </ol>
 </div>
@@ -109,9 +109,9 @@ body {
 @foreach($chapters as $chapter)
 <div style="page-break-before: always;">
     @if($setting->show_chapter_headers)
-        <div class="chapter-title">{{ $chapter->title }}</div>
+        <div class="chapter-title">{!! $fmt->inline($chapter->title) !!}</div>
     @endif
-    <div class="chapter-body">{{ $chapter->content }}</div>
+    <div class="chapter-body">{!! $fmt->block($chapter->content) !!}</div>
 </div>
 @endforeach
 

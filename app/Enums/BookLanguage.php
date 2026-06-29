@@ -8,6 +8,12 @@ enum BookLanguage: string
     case Ar = 'ar';
     case Fr = 'fr';
 
+    /** Whether this language is written in Arabic script (selects the Arabic font slot). */
+    public function isArabic(): bool
+    {
+        return $this === self::Ar;
+    }
+
     public function label(): string
     {
         return match ($this) {

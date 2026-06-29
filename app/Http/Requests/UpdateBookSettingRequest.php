@@ -25,7 +25,6 @@ class UpdateBookSettingRequest extends FormRequest
             'template'                 => ['sometimes', Rule::enum(PdfTemplate::class)],
             'latin_font'               => ['sometimes', Rule::enum(BookFont::class)],
             'arabic_font'              => ['sometimes', Rule::enum(BookFont::class)],
-            'heading_font'             => ['sometimes', Rule::enum(BookFont::class)],
             'text_direction'           => ['sometimes', Rule::enum(TextDirection::class)],
             'language'                 => ['sometimes', Rule::enum(BookLanguage::class)],
             'font_size'                => ['sometimes', 'numeric', 'min:8', 'max:72'],

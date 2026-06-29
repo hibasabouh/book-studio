@@ -19,7 +19,6 @@ class BookSettingResource extends JsonResource
             'template'                 => $this->template,
             'latin_font'               => $this->latin_font,
             'arabic_font'              => $this->arabic_font,
-            'heading_font'             => $this->heading_font,
             'text_direction'           => $this->text_direction,
             'language'                 => $this->language,
             'font_size'                => $this->font_size,

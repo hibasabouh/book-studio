@@ -131,7 +131,6 @@
   "settings.section_typography": "Typography",
   "settings.field_latin_font": "Latin font",
   "settings.field_arabic_font": "Arabic font",
-  "settings.field_heading_font": "Heading font",
   "settings.field_font_size": "Font size (pt)",
   "settings.field_chapter_header_font_size": "Chapter header size (pt)",
   "settings.field_line_height": "Line height",

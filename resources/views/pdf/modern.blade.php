@@ -20,7 +20,7 @@ body {
     border-{{ $isRtl ? 'right' : 'left' }}: 4px solid #4f46e5;
 }
 .cover-title {
-    font-family: {{ $headingFont }};
+    font-family: {{ $bodyFont }};
     font-size: 28pt;
     font-weight: bold;
     color: #111;
@@ -39,7 +39,7 @@ body {
 
 /* ── Table of Contents ── */
 .toc-title {
-    font-family: {{ $headingFont }};
+    font-family: {{ $bodyFont }};
     font-size: {{ $setting->chapter_header_font_size }}pt;
     font-weight: bold;
     color: #4f46e5;
@@ -75,7 +75,7 @@ body {
     margin-bottom: 2px;
 }
 .chapter-title {
-    font-family: {{ $headingFont }};
+    font-family: {{ $bodyFont }};
     font-size: {{ $setting->chapter_header_font_size }}pt;
     font-weight: bold;
     color: #111;
@@ -91,12 +91,12 @@ body {
 
 {{-- Cover --}}
 <div class="cover">
-    <p class="cover-title">{{ $book->title }}</p>
+    <p class="cover-title">{!! $fmt->inline($book->title) !!}</p>
     @if($setting->subtitle)
-        <p class="cover-subtitle">{{ $setting->subtitle }}</p>
+        <p class="cover-subtitle">{!! $fmt->inline($setting->subtitle) !!}</p>
     @endif
     @if($setting->author)
-        <p class="cover-author">{{ $setting->author }}</p>
+        <p class="cover-author">{!! $fmt->inline($setting->author) !!}</p>
     @endif
 </div>
 
@@ -107,7 +107,7 @@ body {
     <ul class="toc-list">
         @foreach($chapters as $i => $chapter)
             <li>
-                <span class="toc-num">{{ $i + 1 }}.</span>{{ $chapter->title }}
+                <span class="toc-num">{{ $i + 1 }}.</span>{!! $fmt->inline($chapter->title) !!}
             </li>
         @endforeach
     </ul>
@@ -120,10 +120,10 @@ body {
     @if($setting->show_chapter_headers)
         <div class="chapter-header">
             <div class="chapter-number">{{ $labels['chapter'] }} {{ $i + 1 }}</div>
-            <div class="chapter-title">{{ $chapter->title }}</div>
+            <div class="chapter-title">{!! $fmt->inline($chapter->title) !!}</div>
         </div>
     @endif
-    <div class="chapter-body">{{ $chapter->content }}</div>
+    <div class="chapter-body">{!! $fmt->block($chapter->content) !!}</div>
 </div>
 @endforeach
 

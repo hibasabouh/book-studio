@@ -82,21 +82,54 @@ enum BookFont: string
     }
 
     /**
-     * mpdf built-in font family name used for PDF rendering.
-     * When custom font files are bundled in storage/fonts/, these will map
-     * to the configured font family names instead.
+     * mpdf font-family key. Each value maps to a bundled family registered via
+     * {@see self::mpdfFontData()}; the TTF files live in storage/fonts/.
      */
     public function mpdfFamily(): string
     {
         return match ($this) {
-            self::Amiri,
-            self::Cairo,
-            self::NotoNaskhArabic,
-            self::Tajawal,
-            self::ElMessiri,
-            self::Lateef,
-            self::ReemKufi => 'dejavusans',
-            default => 'dejavuserif',
+            self::EbGaramond => 'ebgaramond',
+            self::PlayfairDisplay => 'playfairdisplay',
+            self::Merriweather => 'merriweather',
+            self::Lora => 'lora',
+            self::CrimsonPro => 'crimsonpro',
+            self::LibreBaskerville => 'librebaskerville',
+            self::Cardo => 'cardo',
+            self::Amiri => 'amiri',
+            self::Cairo => 'cairo',
+            self::NotoNaskhArabic => 'notonaskharabic',
+            self::Tajawal => 'tajawal',
+            self::ElMessiri => 'elmessiri',
+            self::Lateef => 'lateef',
+            self::ReemKufi => 'reemkufi',
         };
+    }
+
+    /**
+     * mpdf `fontdata` entries for every bundled family, keyed by {@see mpdfFamily()}.
+     * Arabic families enable OpenType layout + kashida so glyphs shape and join.
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    public static function mpdfFontData(): array
+    {
+        $data = [];
+
+        foreach (self::cases() as $font) {
+            $key = $font->mpdfFamily();
+            $entry = [
+                'R' => "{$key}-Regular.ttf",
+                'B' => "{$key}-Bold.ttf",
+            ];
+
+            if ($font->isArabic()) {
+                $entry['useOTL'] = 0xFF;
+                $entry['useKashida'] = 75;
+            }
+
+            $data[$key] = $entry;
+        }
+
+        return $data;
     }
 }

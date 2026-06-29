@@ -130,5 +130,8 @@
   "settings.field_heading_font": "خط العناوين",
   "settings.field_font_size": "حجم الخط (نقطة)",
   "settings.field_chapter_header_font_size": "حجم عنوان الفصل (نقطة)",
-  "settings.field_line_height": "تباعد الأسطر"
+  "settings.field_line_height": "تباعد الأسطر",
+  "export.button": "تصدير PDF",
+  "export.exporting": "جارٍ التصدير…",
+  "export.error": "فشل التصدير. حاول مرة أخرى."
 }

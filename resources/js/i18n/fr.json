@@ -130,5 +130,8 @@
   "settings.field_heading_font": "Police des titres",
   "settings.field_font_size": "Taille de police (pt)",
   "settings.field_chapter_header_font_size": "Taille titre de chapitre (pt)",
-  "settings.field_line_height": "Interligne"
+  "settings.field_line_height": "Interligne",
+  "export.button": "Exporter en PDF",
+  "export.exporting": "Exportation…",
+  "export.error": "Échec de l'export. Veuillez réessayer."
 }

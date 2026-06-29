@@ -8,7 +8,6 @@ enum PdfTemplate: string
     case Modern = 'modern';
     case Elegant = 'elegant';
     case Manuscript = 'manuscript';
-    case Arabic = 'arabic';
 
     public function label(): string
     {
@@ -17,7 +16,6 @@ enum PdfTemplate: string
             self::Modern => 'Modern',
             self::Elegant => 'Elegant',
             self::Manuscript => 'Manuscript',
-            self::Arabic => 'Arabic',
         };
     }
 }

@@ -80,4 +80,23 @@ enum BookFont: string
     {
         return $this->script() === 'arabic';
     }
+
+    /**
+     * mpdf built-in font family name used for PDF rendering.
+     * When custom font files are bundled in storage/fonts/, these will map
+     * to the configured font family names instead.
+     */
+    public function mpdfFamily(): string
+    {
+        return match ($this) {
+            self::Amiri,
+            self::Cairo,
+            self::NotoNaskhArabic,
+            self::Tajawal,
+            self::ElMessiri,
+            self::Lateef,
+            self::ReemKufi => 'dejavusans',
+            default => 'dejavuserif',
+        };
+    }
 }

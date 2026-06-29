@@ -130,5 +130,8 @@
   "settings.field_heading_font": "Heading font",
   "settings.field_font_size": "Font size (pt)",
   "settings.field_chapter_header_font_size": "Chapter header size (pt)",
-  "settings.field_line_height": "Line height"
+  "settings.field_line_height": "Line height",
+  "export.button": "Export PDF",
+  "export.exporting": "Exporting…",
+  "export.error": "Export failed. Please try again."
 }

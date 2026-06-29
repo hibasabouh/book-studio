@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BookExportController;
 use App\Http\Controllers\BookSettingController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ProfileController;
@@ -45,6 +46,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Book settings
     Route::get('books/{book}/setting', [BookSettingController::class, 'show']);
     Route::patch('books/{book}/setting', [BookSettingController::class, 'update']);
+
+    // Book export
+    Route::get('books/{book}/export', [BookExportController::class, 'download']);
 
     // Chapters management (shallow: index/store nested, show/update/destroy flat)
     Route::post('books/{book}/chapters/reorder', [ChapterController::class, 'reorder']);

@@ -51,11 +51,11 @@
                     this.error = null;
                     this.errors = {};
                     try {
-                        const data = await window.auth.fetchJson('/api/register', {
+                        const data = await window.auth.fetchJson('/register', {
                             method: 'POST',
                             body: JSON.stringify(this.form),
                         });
-                        window.auth.setToken(data.token);
+                        this.$store.auth.login(data.user);
                         // New accounts are unverified — go enter the emailed OTP.
                         window.location.href = '/email/verify';
                     } catch (e) {

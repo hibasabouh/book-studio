@@ -6,6 +6,6 @@
             if (['en', 'ar', 'fr'].indexOf(l) < 0) l = 'en';
             document.documentElement.lang = l;
             document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
-        } catch (e) {}
+        } catch (e) { console.error(e); }
     })();
 </script>

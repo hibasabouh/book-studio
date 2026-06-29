@@ -32,6 +32,7 @@
         </div>
     </div>
 
+    @include('partials.toasts')
     @stack('scripts')
 </body>
 </html>

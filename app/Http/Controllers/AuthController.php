@@ -19,6 +19,7 @@ use Illuminate\Auth\Events\Verified;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -57,11 +58,93 @@ class AuthController extends Controller
     }
 
     /**
-     * Register a new user and issue a token.
+     * Session login for the browser frontend (web route, CSRF-protected).
+     * Returns the authenticated user as JSON; the session cookie handles auth
+     * for all subsequent same-origin requests.
+     */
+    public function webLogin(LoginRequest $request): JsonResponse
+    {
+        if (! Auth::attempt($request->only('email', 'password'))) {
+            throw ValidationException::withMessages([
+                'email' => [__('auth.failed')],
+            ]);
+        }
+
+        $request->session()->regenerate();
+
+        return response()->json(['user' => new UserResource(Auth::user())]);
+    }
+
+    /**
+     * Session register for the browser frontend.
+     */
+    public function webRegister(RegisterRequest $request, OtpService $otp): JsonResponse
+    {
+        $user = new User();
+        $user->name = $request->validated('name');
+        $user->email = $request->validated('email');
+        $user->password = $request->validated('password');
+        $user->role = Role::User;
+        $user->save();
+
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        $code = $otp->generate($user, OtpChannel::Email, OtpPurpose::Verify);
+        $otp->send($user, OtpChannel::Email, $code);
+
+        return response()->json(['user' => new UserResource($user)], 201);
+    }
+
+    /**
+     * Session logout for the browser frontend.
+     */
+    public function webLogout(Request $request): JsonResponse
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json(['message' => __('messages.logged_out')]);
+    }
+
+    /**
+     * Google session login for the browser frontend.
+     */
+    public function webGoogle(GoogleAuthRequest $request, GoogleAuthService $google): JsonResponse
+    {
+        $claims = $google->verify($request->validated('id_token'));
+
+        $user = User::where('email', $claims['email'])->first();
+
+        if (! $user) {
+            $user = new User();
+            $user->name = $claims['name'];
+            $user->email = $claims['email'];
+            $user->password = null;
+            $user->role = Role::User;
+        }
+
+        $user->google_id ??= $claims['google_id'];
+        $user->avatar ??= $claims['avatar'];
+
+        if (! $user->email_verified_at && $claims['email_verified']) {
+            $user->email_verified_at = now();
+        }
+
+        $user->save();
+
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        return response()->json(['user' => new UserResource($user)]);
+    }
+
+    /**
+     * Register a new user and issue a token (API / mobile clients).
      *
-     * Token-based: no session is created. The user is logged in immediately but
-     * unverified — an OTP is emailed and must be confirmed (verifyEmail) before
-     * the `verified` middleware allows access to protected features.
+     * Unverified — an OTP is emailed and must be confirmed before the `verified`
+     * middleware allows access to protected features.
      */
     public function register(RegisterRequest $request, OtpService $otp): JsonResponse
     {

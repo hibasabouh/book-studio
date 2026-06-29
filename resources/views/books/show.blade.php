@@ -146,9 +146,7 @@
                         });
                         this.chapters.push(data.data);
                         this.select(data.data);
-                    } catch (e) {
-                        alert(e.data?.message || this.$store.i18n.t('chapters.error'));
-                    }
+                    } catch (e) { console.error(e); }
                 },
 
                 async save() {
@@ -165,7 +163,6 @@
                         this.selected = data.data;
                     } catch (e) {
                         if (e.status === 422) this.errors = e.data?.errors || {};
-                        else alert(e.data?.message || this.$store.i18n.t('chapters.error'));
                     } finally {
                         this.saving = false;
                     }
@@ -180,9 +177,7 @@
                             this.selected = null;
                             this.form = { title: '', content: '' };
                         }
-                    } catch (e) {
-                        alert(e.data?.message || this.$store.i18n.t('chapters.error'));
-                    }
+                    } catch (e) { console.error(e); }
                 },
 
                 async moveUp(index) {

@@ -125,7 +125,6 @@
                         this.modalOpen = false;
                     } catch (e) {
                         if (e.status === 422) this.errors = e.data?.errors || {};
-                        else alert(e.data?.message || this.$store.i18n.t('books.error'));
                     } finally {
                         this.saving = false;
                     }
@@ -136,9 +135,7 @@
                     try {
                         await window.auth.fetchJson(`/api/books/${book.id}`, { method: 'DELETE' });
                         this.books = this.books.filter(b => b.id !== book.id);
-                    } catch (e) {
-                        alert(e.data?.message || this.$store.i18n.t('books.error'));
-                    }
+                    } catch (e) { console.error(e); }
                 },
             };
         }

@@ -1,8 +1,4 @@
-{{--
-    Sessionless nav. Auth state is read client-side from the Alpine `auth` store
-    (backed by the localStorage token), so the same shell renders for guests and
-    authenticated users without the server knowing who is logged in.
---}}
+{{-- Auth state is read client-side from the Alpine `auth` store, confirmed via GET /api/user. --}}
 <nav x-data class="border-b border-gray-200 bg-white" x-cloak>
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
@@ -46,7 +42,7 @@
                             <span x-text="$store.auth.user?.name || $t('nav.profile')"></span>
                         </a>
                         <button type="button"
-                                @click="$store.auth.logout(); window.location.href = '/login'"
+                                @click="await $store.auth.logout(); window.location.href = '/login'"
                                 class="text-sm font-medium text-gray-600 hover:text-gray-900"
                                 x-text="$t('nav.logout')"></button>
                     </div>

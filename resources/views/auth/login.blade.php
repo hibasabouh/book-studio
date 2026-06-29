@@ -46,11 +46,11 @@
                     this.loading = true;
                     this.error = null;
                     try {
-                        const data = await window.auth.fetchJson('/api/login', {
+                        const data = await window.auth.fetchJson('/login', {
                             method: 'POST',
                             body: JSON.stringify(this.form),
                         });
-                        window.auth.setToken(data.token);
+                        this.$store.auth.login(data.user);
                         window.location.href = '/dashboard';
                     } catch (e) {
                         this.error = e.data?.message || this.$store.i18n.t('login.error');

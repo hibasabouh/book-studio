@@ -43,16 +43,14 @@
             // response.credential is the Google ID token, verified server-side.
             window.handleGoogleCredential = async function (response) {
                 try {
-                    const data = await window.auth.fetchJson('/api/auth/google', {
+                    const data = await window.auth.fetchJson('/auth/google', {
                         method: 'POST',
                         body: JSON.stringify({ id_token: response.credential }),
                     });
-                    window.auth.setToken(data.token);
+                    window.Alpine.store('auth').login(data.user);
                     // Google accounts are pre-verified — straight in.
                     window.location.href = '/dashboard';
-                } catch (e) {
-                    alert(e.data?.message || window.Alpine.store('i18n').t('google.error'));
-                }
+                } catch (e) { console.error(e); }
             };
         </script>
     @endpush

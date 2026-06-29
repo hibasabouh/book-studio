@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BookSettingController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Books management
     Route::apiResource('books', BookController::class);
+
+    // Book settings
+    Route::get('books/{book}/setting', [BookSettingController::class, 'show']);
+    Route::patch('books/{book}/setting', [BookSettingController::class, 'update']);
 
     // Chapters management (shallow: index/store nested, show/update/destroy flat)
     Route::post('books/{book}/chapters/reorder', [ChapterController::class, 'reorder']);

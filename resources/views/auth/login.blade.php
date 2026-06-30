@@ -51,7 +51,8 @@
                             body: JSON.stringify(this.form),
                         });
                         this.$store.auth.login(data.user);
-                        window.location.href = '/dashboard';
+                        // Admins land on the admin dashboard; everyone else on theirs.
+                        window.location.href = this.$store.mode.home(data.user);
                     } catch (e) {
                         this.error = e.data?.message || this.$store.i18n.t('login.error');
                     } finally {

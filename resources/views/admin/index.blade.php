@@ -63,6 +63,7 @@
                     const u = this.$store.auth.user;
                     if (!u) return; // wait for the user to load
                     if (u.role !== 'admin') { window.location.href = '/dashboard'; return; }
+                    this.$store.mode.set('admin');
                     if (!this.loaded) this.load();
                 },
                 async load() {

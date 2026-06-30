@@ -60,6 +60,37 @@ Alpine.store('confirm', {
     },
 });
 
+/**
+ * Admin-only view mode. Admins can switch between the regular "user" experience
+ * and the "admin" dashboard; the choice persists across page loads. For
+ * non-admins it stays 'user' and the mode-gated UI never shows.
+ */
+Alpine.store('mode', {
+    current: localStorage.getItem('mode') === 'admin' ? 'admin' : 'user',
+
+    get isAdmin() {
+        return this.current === 'admin';
+    },
+
+    set(mode) {
+        this.current = mode === 'admin' ? 'admin' : 'user';
+        localStorage.setItem('mode', this.current);
+    },
+
+    clear() {
+        this.current = 'user';
+        localStorage.removeItem('mode');
+    },
+
+    /** Landing path for a user, (re)setting their mode to match their role. */
+    home(user) {
+        const isAdmin = user?.role === 'admin';
+        this.set(isAdmin ? 'admin' : 'user');
+
+        return isAdmin ? '/admin' : '/dashboard';
+    },
+});
+
 Alpine.store('toasts', {
     items: [],
     add(message, type = 'error') {
@@ -106,6 +137,7 @@ Alpine.store('auth', {
             await fetchJson('/logout', { method: 'POST' });
         } finally {
             this.user = null;
+            Alpine.store('mode').clear();
         }
     },
 });

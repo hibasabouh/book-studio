@@ -48,8 +48,8 @@
                         body: JSON.stringify({ id_token: response.credential }),
                     });
                     window.Alpine.store('auth').login(data.user);
-                    // Google accounts are pre-verified — straight in.
-                    window.location.href = '/dashboard';
+                    // Google accounts are pre-verified — straight in (admins to /admin).
+                    window.location.href = window.Alpine.store('mode').home(data.user);
                 } catch (e) { console.error(e); }
             };
         </script>

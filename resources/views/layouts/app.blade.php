@@ -23,6 +23,7 @@
     </div>
 
     @include('partials.toasts')
+    @include('partials.confirm')
     @stack('scripts')
 </body>
 </html>

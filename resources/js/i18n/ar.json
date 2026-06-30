@@ -1,5 +1,8 @@
 {
   "common.or_continue_with": "أو تابع باستخدام",
+  "common.confirm_title": "هل أنت متأكد؟",
+  "common.cancel": "إلغاء",
+  "common.delete": "حذف",
   "field.name": "الاسم",
   "field.email": "البريد الإلكتروني",
   "field.password": "كلمة المرور",

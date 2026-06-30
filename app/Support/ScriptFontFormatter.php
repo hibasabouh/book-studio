@@ -36,27 +36,45 @@ class ScriptFontFormatter
             : [$arabicFont, self::ARABIC];
 
         $this->secondaryFamily = $secondary->mpdfFamily();
-        $this->pattern = '/['.$script.']+/u';
+        // Capturing group so preg_split keeps the secondary-script runs.
+        $this->pattern = '/(['.$script.']+)/u';
     }
 
     /** Escape and wrap secondary-script runs; for single-line values. */
     public function inline(?string $text): string
     {
-        return $this->wrap(e((string) $text));
+        return $this->wrap((string) $text);
     }
 
     /** Like {@see inline()} but converts newlines to <br> for body content. */
     public function block(?string $text): string
     {
-        return nl2br($this->wrap(e((string) $text)));
+        return nl2br($this->wrap((string) $text));
     }
 
-    private function wrap(string $escaped): string
+    /**
+     * Split raw text into runs, escape each, and wrap secondary-script runs.
+     *
+     * Escaping must come after matching: running the regex over escaped text
+     * would match Latin letters inside entities (the "quot" in &quot;) and
+     * split the span mid-entity, breaking quotes, ampersands and angle brackets.
+     */
+    private function wrap(string $text): string
     {
-        return preg_replace(
-            $this->pattern,
-            '<span style="font-family: '.$this->secondaryFamily.'">$0</span>',
-            $escaped
-        );
+        // DELIM_CAPTURE keeps the matched runs; odd indices are secondary-script.
+        $parts = preg_split($this->pattern, $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+        $out = '';
+        foreach ($parts as $i => $part) {
+            if ($part === '') {
+                continue;
+            }
+
+            $out .= $i % 2 === 1
+                ? '<span style="font-family: '.$this->secondaryFamily.'">'.e($part).'</span>'
+                : e($part);
+        }
+
+        return $out;
     }
 }

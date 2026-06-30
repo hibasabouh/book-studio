@@ -1,5 +1,8 @@
 {
   "common.or_continue_with": "ou continuer avec",
+  "common.confirm_title": "Êtes-vous sûr ?",
+  "common.cancel": "Annuler",
+  "common.delete": "Supprimer",
   "field.name": "Nom",
   "field.email": "E-mail",
   "field.password": "Mot de passe",

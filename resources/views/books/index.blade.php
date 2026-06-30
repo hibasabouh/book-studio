@@ -131,7 +131,7 @@
                 },
 
                 async destroy(book) {
-                    if (!confirm(this.$store.i18n.t('books.confirm_delete'))) return;
+                    if (!await this.$store.confirm.ask(this.$t('books.confirm_delete'))) return;
                     try {
                         await window.auth.fetchJson(`/api/books/${book.id}`, { method: 'DELETE' });
                         this.books = this.books.filter(b => b.id !== book.id);

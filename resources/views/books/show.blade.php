@@ -1,5 +1,16 @@
 @extends('layouts.app')
 
+@php
+    use App\Enums\BookFont;
+    use App\Enums\PdfTemplate;
+
+    // Single source of truth for the pickers: options are rendered statically
+    // from the enums (below) so the saved value preselects reliably and the
+    // lists never drift from the backend.
+    $latinFonts  = array_filter(BookFont::cases(), fn (BookFont $f) => $f->script() === 'latin');
+    $arabicFonts = array_filter(BookFont::cases(), fn (BookFont $f) => $f->script() === 'arabic');
+@endphp
+
 @section('content')
     <div x-data="bookEditor({{ $book->id }})" x-init="init()" class="flex h-[calc(100vh-4rem)] overflow-hidden" x-cloak>
 
@@ -112,9 +123,9 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_template')"></label>
                                         <select x-model="settingsForm.template"
                                                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                            <template x-for="opt in templates" :key="opt.value">
-                                                <option :value="opt.value" x-text="opt.label"></option>
-                                            </template>
+                                            @foreach (PdfTemplate::cases() as $template)
+                                                <option value="{{ $template->value }}">{{ $template->label() }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div>
@@ -161,18 +172,18 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_latin_font')"></label>
                                         <select x-model="settingsForm.latin_font"
                                                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                            <template x-for="f in latinFonts" :key="f.value">
-                                                <option :value="f.value" x-text="f.label"></option>
-                                            </template>
+                                            @foreach ($latinFonts as $font)
+                                                <option value="{{ $font->value }}">{{ $font->label() }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_arabic_font')"></label>
                                         <select x-model="settingsForm.arabic_font"
                                                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                            <template x-for="f in arabicFonts" :key="f.value">
-                                                <option :value="f.value" x-text="f.label"></option>
-                                            </template>
+                                            @foreach ($arabicFonts as $font)
+                                                <option value="{{ $font->value }}">{{ $font->label() }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -262,30 +273,6 @@
                 settingsSaving: false,
                 exporting: false,
 
-                templates: [
-                    { value: 'classic',    label: 'Classic' },
-                    { value: 'modern',     label: 'Modern' },
-                    { value: 'elegant',    label: 'Elegant' },
-                    { value: 'manuscript', label: 'Manuscript' },
-                ],
-                latinFonts: [
-                    { value: 'eb_garamond',       label: 'EB Garamond' },
-                    { value: 'playfair_display',   label: 'Playfair Display' },
-                    { value: 'merriweather',       label: 'Merriweather' },
-                    { value: 'lora',               label: 'Lora' },
-                    { value: 'crimson_pro',        label: 'Crimson Pro' },
-                    { value: 'libre_baskerville',  label: 'Libre Baskerville' },
-                    { value: 'cardo',              label: 'Cardo' },
-                ],
-                arabicFonts: [
-                    { value: 'amiri',              label: 'Amiri' },
-                    { value: 'cairo',              label: 'Cairo' },
-                    { value: 'noto_naskh_arabic',  label: 'Noto Naskh Arabic' },
-                    { value: 'tajawal',            label: 'Tajawal' },
-                    { value: 'el_messiri',         label: 'El Messiri' },
-                    { value: 'lateef',             label: 'Lateef' },
-                    { value: 'reem_kufi',          label: 'Reem Kufi' },
-                ],
                 init() {
                     this.$watch('$store.auth.ready', () => this.guard());
                     this.guard();
@@ -369,7 +356,7 @@
                 },
 
                 async destroy(chapter) {
-                    if (!confirm(this.$store.i18n.t('chapters.confirm_delete'))) return;
+                    if (!await this.$store.confirm.ask(this.$t('chapters.confirm_delete'))) return;
                     try {
                         await window.auth.fetchJson(`/api/chapters/${chapter.id}`, { method: 'DELETE' });
                         this.chapters = this.chapters.filter(c => c.id !== chapter.id);

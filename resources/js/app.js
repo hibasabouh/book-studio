@@ -33,6 +33,33 @@ Alpine.store('i18n', {
 
 Alpine.magic('t', () => (key) => Alpine.store('i18n').t(key));
 
+/**
+ * Promise-based confirmation dialog, a drop-in replacement for window.confirm.
+ * `ask()` opens the shared modal (see partials/confirm.blade.php) and resolves
+ * to true/false once the user picks an action.
+ */
+Alpine.store('confirm', {
+    open: false,
+    message: '',
+    confirmLabel: '',
+    _resolve: null,
+
+    ask(message, confirmLabel = null) {
+        this.message = message;
+        this.confirmLabel = confirmLabel ?? Alpine.store('i18n').t('common.delete');
+        this.open = true;
+        return new Promise((resolve) => { this._resolve = resolve; });
+    },
+
+    respond(result) {
+        if (!this.open) return;
+        this.open = false;
+        const resolve = this._resolve;
+        this._resolve = null;
+        resolve?.(result);
+    },
+});
+
 Alpine.store('toasts', {
     items: [],
     add(message, type = 'error') {

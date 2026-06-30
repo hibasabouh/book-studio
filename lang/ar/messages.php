@@ -14,4 +14,7 @@ return [
     'password_reset_done' => 'تمت إعادة تعيين كلمة المرور. يرجى تسجيل الدخول بكلمة المرور الجديدة.',
     'book_deleted'    => 'تم حذف الكتاب.',
     'chapter_deleted' => 'تم حذف الفصل.',
+    'user_deleted'           => 'تم حذف المستخدم.',
+    'cannot_delete_self'     => 'لا يمكنك حذف حسابك الخاص.',
+    'cannot_change_own_role' => 'لا يمكنك تغيير دورك الخاص.',
 ];

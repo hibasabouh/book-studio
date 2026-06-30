@@ -14,4 +14,7 @@ return [
     'password_reset_done' => 'Mot de passe réinitialisé. Veuillez vous connecter avec votre nouveau mot de passe.',
     'book_deleted'    => 'Livre supprimé.',
     'chapter_deleted' => 'Chapitre supprimé.',
+    'user_deleted'           => 'Utilisateur supprimé.',
+    'cannot_delete_self'     => 'Vous ne pouvez pas supprimer votre propre compte.',
+    'cannot_change_own_role' => 'Vous ne pouvez pas modifier votre propre rôle.',
 ];

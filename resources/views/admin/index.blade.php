@@ -1,7 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    <div x-data="adminPage()" x-init="init()" class="mx-auto max-w-5xl space-y-8" x-cloak>
+    <div x-data="adminPage()" x-init="init()" class="mx-auto flex max-w-6xl flex-col gap-6 sm:flex-row" x-cloak>
+        @include('partials.admin-sidebar', ['active' => 'dashboard'])
+
+        <div class="min-w-0 flex-1 space-y-8">
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-gray-900" x-text="$t('admin.title')"></h1>
             <p class="mt-1 text-sm text-gray-500" x-text="$t('admin.subtitle')"></p>
@@ -43,6 +46,7 @@
                 </table>
             </div>
         </section>
+        </div>
     </div>
 @endsection
 
@@ -58,12 +62,7 @@
                     this.guard();
                 },
                 guard() {
-                    if (!this.$store.auth.ready) return;
-                    if (!this.$store.auth.check) { window.location.href = '/login'; return; }
-                    const u = this.$store.auth.user;
-                    if (!u) return; // wait for the user to load
-                    if (u.role !== 'admin') { window.location.href = '/dashboard'; return; }
-                    this.$store.mode.set('admin');
+                    if (!window.adminGuard(this)) return;
                     if (!this.loaded) this.load();
                 },
                 async load() {

@@ -14,4 +14,7 @@ return [
     'password_reset_done' => 'Password reset. Please sign in with your new password.',
     'book_deleted'    => 'Book deleted.',
     'chapter_deleted' => 'Chapter deleted.',
+    'user_deleted'           => 'User deleted.',
+    'cannot_delete_self'     => 'You cannot delete your own account.',
+    'cannot_change_own_role' => 'You cannot change your own role.',
 ];

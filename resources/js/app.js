@@ -10,6 +10,22 @@ window.Alpine = Alpine;
 window.auth = { fetchJson };
 
 /**
+ * Shared guard for admin pages. Redirects unauthenticated visitors to /login and
+ * non-admins to /dashboard, and locks the view into admin mode. Returns true once
+ * the current user is confirmed to be an admin (the page may then load its data).
+ */
+window.adminGuard = function (component) {
+    const auth = component.$store.auth;
+    if (!auth.ready) return false;
+    if (!auth.check) { window.location.href = '/login'; return false; }
+    if (!auth.user) return false; // wait for the user record to load
+    if (auth.user.role !== 'admin') { window.location.href = '/dashboard'; return false; }
+    component.$store.mode.set('admin');
+
+    return true;
+};
+
+/**
  * Reactive UI locale. Components read text via the `$t` magic; changing
  * `$store.i18n.locale` re-renders every binding, so language switches live.
  */

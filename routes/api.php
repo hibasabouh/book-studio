@@ -42,7 +42,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
 
     // Admin-only data.
-    Route::get('/admin/stats', [AdminController::class, 'stats'])->middleware('can:admin');
+    Route::middleware('can:admin')->prefix('admin')->group(function () {
+        Route::get('/stats', [AdminController::class, 'stats']);
+        Route::get('/users', [AdminController::class, 'users']);
+        Route::get('/users/{user}', [AdminController::class, 'userDetails']);
+        Route::patch('/users/{user}', [AdminController::class, 'updateUser']);
+        Route::delete('/users/{user}', [AdminController::class, 'destroyUser']);
+    });
 
     // Books management
     Route::apiResource('books', BookController::class);

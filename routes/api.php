@@ -6,6 +6,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookExportController;
 use App\Http\Controllers\BookSettingController;
 use App\Http\Controllers\ChapterController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update']);
     Route::put('/profile/password', [ProfileController::class, 'updatePassword']);
     Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar']);
+
+    // Dashboard overview stats for the authenticated user.
+    Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
 
     // Admin-only data.
     Route::get('/admin/stats', [AdminController::class, 'stats'])->middleware('can:admin');

@@ -17,13 +17,50 @@
             </div>
         </template>
 
-        <section class="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-900/5">
-            <h2 class="text-base font-semibold text-gray-900" x-text="$t('dashboard.books_title')"></h2>
-            <p class="mt-2 text-sm text-gray-500" x-text="$t('dashboard.books_empty')"></p>
-        </section>
+        {{-- Analytics cards --}}
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div class="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-900/5">
+                <p class="text-sm text-gray-500" x-text="$t('dashboard.total_books')"></p>
+                <p class="mt-2 text-3xl font-semibold text-gray-900" x-text="stats.books_total ?? '—'"></p>
+            </div>
+            <div class="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-900/5">
+                <p class="text-sm text-gray-500" x-text="$t('dashboard.total_chapters')"></p>
+                <p class="mt-2 text-3xl font-semibold text-gray-900" x-text="stats.chapters_total ?? '—'"></p>
+            </div>
+            <div class="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-900/5">
+                <p class="text-sm text-gray-500" x-text="$t('dashboard.avg_chapters')"></p>
+                <p class="mt-2 text-3xl font-semibold text-gray-900" x-text="stats.chapters_avg ?? '—'"></p>
+            </div>
+        </div>
 
-        <a href="/profile" class="inline-block text-sm font-medium text-indigo-600 hover:text-indigo-500"
-           x-text="$t('dashboard.open_profile')"></a>
+        {{-- Recent books --}}
+        <section class="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-900/5">
+            <div class="flex items-center justify-between">
+                <h2 class="text-base font-semibold text-gray-900" x-text="$t('dashboard.recent_books')"></h2>
+                <a href="/books" class="text-sm font-medium text-indigo-600 hover:text-indigo-500" x-text="$t('dashboard.view_all')"></a>
+            </div>
+
+            <template x-if="loaded && recentBooks.length === 0">
+                <p class="mt-4 text-sm text-gray-500" x-text="$t('dashboard.books_empty')"></p>
+            </template>
+
+            <ul class="mt-4 divide-y divide-gray-100" x-show="recentBooks.length > 0">
+                <template x-for="book in recentBooks" :key="book.id">
+                    <li>
+                        <a :href="`/books/${book.id}`" class="flex items-center justify-between gap-3 py-3 hover:bg-gray-50">
+                            <div class="min-w-0">
+                                <p class="truncate text-sm font-medium text-gray-900" x-text="book.title"></p>
+                                <p class="truncate text-xs text-gray-500" x-text="book.description"></p>
+                            </div>
+                            <span class="shrink-0 text-xs text-gray-400">
+                                <span x-text="book.chapters_count ?? 0"></span>
+                                <span x-text="$t('books.chapters_count')"></span>
+                            </span>
+                        </a>
+                    </li>
+                </template>
+            </ul>
+        </section>
     </div>
 @endsection
 
@@ -31,14 +68,26 @@
     <script>
         function dashboardPage() {
             return {
+                stats: {},
+                recentBooks: [],
+                loaded: false,
                 init() {
-                    const guard = () => {
-                        if (this.$store.auth.ready && !this.$store.auth.check) {
-                            window.location.href = '/login';
-                        }
-                    };
-                    this.$watch('$store.auth.ready', guard);
-                    guard();
+                    this.$watch('$store.auth.ready', () => this.guard());
+                    this.guard();
+                },
+                guard() {
+                    if (!this.$store.auth.ready) return;
+                    if (!this.$store.auth.check) { window.location.href = '/login'; return; }
+                    if (!this.loaded) this.load();
+                },
+                async load() {
+                    this.loaded = true;
+                    try {
+                        this.stats = await window.auth.fetchJson('/api/dashboard/stats');
+                        this.recentBooks = this.stats.recent_books ?? [];
+                    } catch (e) {
+                        if (e.status === 403) window.location.href = '/email/verify';
+                    }
                 },
             };
         }

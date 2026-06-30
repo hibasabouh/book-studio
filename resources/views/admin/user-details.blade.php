@@ -34,6 +34,13 @@
                                 <span class="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700"
                                       x-text="user.role"></span>
                                 <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+                                      :class="{
+                                          'bg-green-100 text-green-700': user.status === 'active',
+                                          'bg-gray-100 text-gray-600': user.status === 'inactive',
+                                          'bg-red-100 text-red-700': user.status === 'suspended',
+                                      }"
+                                      x-text="$t(`admin.user_status_${user.status}`)"></span>
+                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
                                       :class="user.email_verified_at ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'"
                                       x-text="user.email_verified_at ? $t('admin.status_verified') : $t('admin.status_unverified')"></span>
                                 <span class="text-xs text-gray-400"

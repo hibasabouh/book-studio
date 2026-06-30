@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Role;
+use App\Enums\UserStatus;
 use App\Http\Requests\IndexUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\BookResource;
@@ -40,6 +41,8 @@ class AdminController extends Controller
             ->when($validated['search'] ?? null, fn ($q, $search) => $q->where(
                 fn ($q) => $q->where('name', 'like', "%{$search}%")->orWhere('email', 'like', "%{$search}%")
             ))
+            ->when($validated['role'] ?? null, fn ($q, $role) => $q->where('role', $role))
+            ->when($validated['status'] ?? null, fn ($q, $status) => $q->where('status', $status))
             ->latest()
             ->paginate($perPage);
 
@@ -91,6 +94,11 @@ class AdminController extends Controller
 
             // Set directly rather than mass-assign — `role` is intentionally not fillable.
             $user->role = Role::from($validated['role']);
+        }
+
+        if (array_key_exists('status', $validated)) {
+            // Set directly rather than mass-assign — `status` is intentionally not fillable.
+            $user->status = UserStatus::from($validated['status']);
         }
 
         if (array_key_exists('name', $validated)) {

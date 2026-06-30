@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\Role;
+use App\Enums\UserStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
@@ -33,6 +34,7 @@ class UpdateUserRequest extends FormRequest
             'avatar' => ['sometimes', 'nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
             'password' => ['sometimes', 'nullable', 'confirmed', Password::min(8)],
             'role' => ['sometimes', 'required', new Enum(Role::class)],
+            'status' => ['sometimes', 'required', new Enum(UserStatus::class)],
         ];
     }
 }

@@ -2,10 +2,11 @@
 
 @php
     use App\Enums\Role;
+    use App\Enums\UserStatus;
 @endphp
 
 @section('content')
-    <div x-data="adminUsersPage()" x-init="init()" class="mx-auto flex max-w-6xl flex-col gap-6 sm:flex-row" x-cloak>
+    <div x-data="adminUsersPage()" x-init="init()" class="flex w-full flex-col gap-6 sm:flex-row" x-cloak>
         @include('partials.admin-sidebar', ['active' => 'users'])
 
         <div class="min-w-0 flex-1 space-y-6">
@@ -14,28 +15,45 @@
                     <h1 class="text-2xl font-semibold tracking-tight text-gray-900" x-text="$t('admin.users_title')"></h1>
                     <p class="mt-1 text-sm text-gray-500" x-text="$t('admin.users_subtitle')"></p>
                 </div>
-                <form @submit.prevent="applySearch()" class="sm:w-64">
-                    <input type="search" x-model="search" @search="applySearch()"
-                           :placeholder="$t('admin.search_users')"
-                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
-                </form>
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+                    <form @submit.prevent="applySearch()" class="sm:w-64">
+                        <input type="search" x-model="search" @search="applySearch()"
+                               :placeholder="$t('admin.search_users')"
+                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                    </form>
+                    <select x-model="role" @change="applyFilters()"
+                            class="rounded-md border-gray-300 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="" x-text="$t('admin.filter_all_roles')"></option>
+                        @foreach (Role::cases() as $role)
+                            <option value="{{ $role->value }}">{{ $role->label() }}</option>
+                        @endforeach
+                    </select>
+                    <select x-model="status" @change="applyFilters()"
+                            class="rounded-md border-gray-300 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="" x-text="$t('admin.filter_all_statuses')"></option>
+                        @foreach (UserStatus::cases() as $status)
+                            <option value="{{ $status->value }}">{{ $status->label() }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
 
-            <div class="overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
-                <table class="w-full text-sm">
+            <div class="overflow-x-auto rounded-lg bg-white shadow-sm ring-1 ring-gray-900/5">
+                <table class="w-full min-w-[760px] text-sm">
                     <thead class="border-b border-gray-100 bg-gray-50">
                         <tr class="text-gray-500">
                             <th class="px-4 py-3 text-start font-medium" x-text="$t('admin.col_name')"></th>
                             <th class="px-4 py-3 text-start font-medium" x-text="$t('admin.col_email')"></th>
                             <th class="px-4 py-3 text-start font-medium" x-text="$t('admin.col_role')"></th>
                             <th class="px-4 py-3 text-start font-medium" x-text="$t('admin.col_status')"></th>
+                            <th class="px-4 py-3 text-start font-medium" x-text="$t('admin.col_verification')"></th>
                             <th class="px-4 py-3 text-start font-medium" x-text="$t('admin.col_joined')"></th>
                             <th class="px-4 py-3 text-end font-medium" x-text="$t('admin.col_actions')"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <template x-if="loaded && users.length === 0">
-                            <tr><td colspan="6" class="px-4 py-8 text-center text-gray-400" x-text="$t('admin.no_users')"></td></tr>
+                            <tr><td colspan="7" class="px-4 py-8 text-center text-gray-400" x-text="$t('admin.no_users')"></td></tr>
                         </template>
 
                         <template x-for="user in users" :key="user.id">
@@ -51,6 +69,14 @@
                                             class="rounded-md border-gray-300 py-1 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:opacity-50">
                                         @foreach (Role::cases() as $role)
                                             <option value="{{ $role->value }}">{{ $role->label() }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <select :value="user.status" @change="updateStatus(user, $event.target.value)"
+                                            class="rounded-md border-gray-300 py-1 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                        @foreach (UserStatus::cases() as $status)
+                                            <option value="{{ $status->value }}">{{ $status->label() }}</option>
                                         @endforeach
                                     </select>
                                 </td>
@@ -110,6 +136,8 @@
                 users: [],
                 meta: null,
                 search: '',
+                role: '',
+                status: '',
                 page: 1,
                 loaded: false,
                 init() {
@@ -129,6 +157,8 @@
                     try {
                         const params = new URLSearchParams({ page: this.page });
                         if (this.search) params.set('search', this.search);
+                        if (this.role) params.set('role', this.role);
+                        if (this.status) params.set('status', this.status);
                         const data = await window.auth.fetchJson(`/api/admin/users?${params.toString()}`);
                         this.users = data.data;
                         this.meta = data.meta;
@@ -137,6 +167,10 @@
                     }
                 },
                 applySearch() {
+                    this.page = 1;
+                    this.fetchUsers();
+                },
+                applyFilters() {
                     this.page = 1;
                     this.fetchUsers();
                 },
@@ -159,6 +193,23 @@
                         if (i > -1) this.users[i] = data.data;
                         window.dispatchEvent(new CustomEvent('app:toast', {
                             detail: { message: this.$t('admin.user_updated'), type: 'success' },
+                        }));
+                    } catch (e) {
+                        // Roll the select back to the stored value on failure.
+                        this.fetchUsers();
+                    }
+                },
+                async updateStatus(user, status) {
+                    if (status === user.status) return;
+                    try {
+                        const data = await window.auth.fetchJson(`/api/admin/users/${user.id}`, {
+                            method: 'PATCH',
+                            body: JSON.stringify({ status }),
+                        });
+                        const i = this.users.findIndex(u => u.id === user.id);
+                        if (i > -1) this.users[i] = data.data;
+                        window.dispatchEvent(new CustomEvent('app:toast', {
+                            detail: { message: this.$t('admin.status_updated'), type: 'success' },
                         }));
                     } catch (e) {
                         // Roll the select back to the stored value on failure.

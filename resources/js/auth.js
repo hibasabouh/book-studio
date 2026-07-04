@@ -8,7 +8,7 @@
  * the session starts.
  */
 
-import { getLocale } from './i18n';
+import { getLocale, translate } from './i18n';
 
 function xsrfToken() {
     const match = document.cookie.split('; ').find(c => c.startsWith('XSRF-TOKEN='));
@@ -37,7 +37,15 @@ export async function fetchJson(url, options = {}) {
     const xsrf = xsrfToken();
     if (xsrf) headers['X-XSRF-TOKEN'] = xsrf;
 
-    const response = await fetch(url, { ...options, headers });
+    let response;
+    try {
+        response = await fetch(url, { ...options, headers });
+    } catch (networkError) {
+        window.dispatchEvent(new CustomEvent('app:toast', {
+            detail: { message: translate('errors.network'), type: 'error' },
+        }));
+        throw Object.assign(new Error(translate('errors.network')), { status: 0, data: null });
+    }
 
     const contentType = response.headers.get('content-type') || '';
     const data = contentType.includes('application/json') ? await response.json() : null;

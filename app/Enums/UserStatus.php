@@ -19,4 +19,17 @@ enum UserStatus: string
             self::Suspended => 'Suspended',
         };
     }
+
+    /**
+     * Translation key explaining why a non-active account is blocked, or null
+     * when the account is allowed to sign in and act.
+     */
+    public function blockMessageKey(): ?string
+    {
+        return match ($this) {
+            self::Active => null,
+            self::Inactive => 'auth.account_inactive',
+            self::Suspended => 'auth.account_suspended',
+        };
+    }
 }

@@ -29,13 +29,16 @@ Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->n
 
 // Authenticated page shells.
 Route::middleware('auth')->group(function () {
+    // Logout stays reachable even for blocked accounts so they can end their session.
     Route::post('/logout', [AuthController::class, 'webLogout']);
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
-    Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
-    Route::get('/admin/users/{user}', [AdminController::class, 'showUser'])->name('admin.users.show');
-    Route::get('/books', [BookController::class, 'index'])->name('books.library');
-    Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
+    Route::middleware('active')->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+        Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
+        Route::get('/admin/users/{user}', [AdminController::class, 'showUser'])->name('admin.users.show');
+        Route::get('/books', [BookController::class, 'index'])->name('books.library');
+        Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
+    });
 });

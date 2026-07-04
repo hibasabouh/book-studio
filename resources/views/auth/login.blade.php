@@ -14,7 +14,7 @@
         <form @submit.prevent="submit" class="space-y-4">
             <x-input-field name="email" tkey="field.email" label="Email" type="email" model="form.email" required autocomplete="email" />
 
-            <x-input-field name="password" tkey="field.password" label="Password" type="password" model="form.password" required autocomplete="current-password" />
+            <x-input-field name="password" tkey="field.password" label="Password" type="password" model="form.password" required autocomplete="current-password" toggleable />
 
             <div class="text-end">
                 <a href="/forgot-password" class="text-sm font-medium text-indigo-600 hover:text-indigo-500" x-text="$t('forgot.link')"></a>
@@ -54,7 +54,7 @@
                         // Admins land on the admin dashboard; everyone else on theirs.
                         window.location.href = this.$store.mode.home(data.user);
                     } catch (e) {
-                        this.error = e.data?.message || this.$store.i18n.t('login.error');
+                        if (e.status === 422) this.error = e.data?.message || this.$store.i18n.t('login.error');
                     } finally {
                         this.loading = false;
                     }

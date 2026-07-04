@@ -22,9 +22,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AuthController extends Controller
 {
+    /**
+     * Reject sign-in for inactive/suspended accounts (403, so it toasts).
+     */
+    protected function ensureActive(User $user): void
+    {
+        if (($messageKey = $user->status->blockMessageKey()) !== null) {
+            abort(403, __($messageKey));
+        }
+    }
+
     /**
      * Render the login page shell (thin Blade form; submits via fetch).
      */
@@ -68,6 +79,18 @@ class AuthController extends Controller
             throw ValidationException::withMessages([
                 'email' => [__('auth.failed')],
             ]);
+        }
+
+        // Credentials are valid, but a blocked account must not keep the session.
+        if ($user = Auth::user()) {
+            try {
+                $this->ensureActive($user);
+            } catch (HttpException $e) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                throw $e;
+            }
         }
 
         $request->session()->regenerate();
@@ -134,6 +157,8 @@ class AuthController extends Controller
 
         $user->save();
 
+        $this->ensureActive($user);
+
         Auth::login($user);
         $request->session()->regenerate();
 
@@ -177,6 +202,8 @@ class AuthController extends Controller
             ]);
         }
 
+        $this->ensureActive($user);
+
         return response()->json([
             'token' => $user->createToken('web')->plainTextToken,
             'user' => new UserResource($user),
@@ -213,6 +240,8 @@ class AuthController extends Controller
         }
 
         $user->save();
+
+        $this->ensureActive($user);
 
         return response()->json([
             'token' => $user->createToken('web')->plainTextToken,

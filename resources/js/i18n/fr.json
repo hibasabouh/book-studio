@@ -1,4 +1,5 @@
 {
+  "errors.network": "Erreur réseau. Veuillez vérifier votre connexion et réessayer.",
   "common.or_continue_with": "ou continuer avec",
   "common.confirm_title": "Êtes-vous sûr ?",
   "common.cancel": "Annuler",

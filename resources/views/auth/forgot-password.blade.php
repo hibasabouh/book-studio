@@ -68,8 +68,10 @@
                         this.message = data.message;
                         this.step = 2;
                     } catch (e) {
-                        if (e.status === 422) this.errors = e.data?.errors || {};
-                        this.error = e.data?.message || this.$store.i18n.t('forgot.error');
+                        if (e.status === 422) {
+                            this.errors = e.data?.errors || {};
+                            this.error = e.data?.message || this.$store.i18n.t('forgot.error');
+                        }
                     } finally {
                         this.loading = false;
                     }
@@ -88,8 +90,10 @@
                         this.message = data.message;
                         setTimeout(() => (window.location.href = '/login'), 1200);
                     } catch (e) {
-                        if (e.status === 422) this.errors = e.data?.errors || {};
-                        this.error = e.data?.message || this.$store.i18n.t('forgot.error');
+                        if (e.status === 422) {
+                            this.errors = e.data?.errors || {};
+                            this.error = e.data?.message || this.$store.i18n.t('forgot.error');
+                        }
                     } finally {
                         this.loading = false;
                     }

@@ -66,6 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Chapters management (shallow: index/store nested, show/update/destroy flat)
         Route::post('books/{book}/chapters/reorder', [ChapterController::class, 'reorder']);
+        Route::post('chapters/{chapter}/ocr', [ChapterController::class, 'ocr']);
         Route::apiResource('books.chapters', ChapterController::class)->shallow();
     });
 });

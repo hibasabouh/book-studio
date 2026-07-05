@@ -17,4 +17,5 @@ return [
     'user_deleted'           => 'User deleted.',
     'cannot_delete_self'     => 'You cannot delete your own account.',
     'cannot_change_own_role' => 'You cannot change your own role.',
+    'ocr_failed' => 'Could not extract text from the uploaded image.',
 ];

@@ -236,8 +236,17 @@
                     </div>
 
                     <div class="flex flex-1 flex-col overflow-hidden">
-                        <label class="block text-xs font-medium uppercase tracking-wide text-gray-500 mb-1"
-                               x-text="$t('chapters.field_content')"></label>
+                        <div class="mb-1 flex items-center justify-between">
+                            <label class="block text-xs font-medium uppercase tracking-wide text-gray-500"
+                                   x-text="$t('chapters.field_content')"></label>
+                            <button type="button" @click="openOcr()"
+                                    class="rounded p-1 text-gray-400 hover:text-indigo-600"
+                                    :title="$t('chapters.ocr_button')">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M14 8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                            </button>
+                        </div>
                         <textarea x-model="form.content"
                                   class="flex-1 block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                   placeholder=""></textarea>
@@ -252,6 +261,58 @@
                 </div>
             </template>
         </main>
+
+        {{-- OCR import modal --}}
+        <div x-show="ocr.open" x-cloak
+             class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 p-4"
+             @keydown.escape.window="closeOcr()">
+            <div class="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl" @click.outside="closeOcr()">
+                <h2 class="text-base font-semibold text-gray-900" x-text="$t('chapters.ocr_title')"></h2>
+
+                <template x-if="!ocr.text">
+                    <div class="mt-4 space-y-3">
+                        <label class="block text-sm font-medium text-gray-700" x-text="$t('chapters.ocr_choose_file')"></label>
+                        <input type="file" accept=".jpg,.jpeg,.png,.gif,.bmp,.pdf,image/*,application/pdf"
+                               @change="onOcrFileChange($event)"
+                               class="block w-full text-sm text-gray-600 file:mr-3 file:rounded-md file:border-0 file:bg-indigo-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-indigo-700 hover:file:bg-indigo-100" />
+                        <p class="text-xs text-gray-400" x-text="$t('chapters.ocr_hint')"></p>
+                        <p class="text-xs text-red-600" x-show="ocr.error" x-text="ocr.error"></p>
+
+                        <div class="mt-4 flex justify-end gap-3">
+                            <button type="button" @click="closeOcr()"
+                                    class="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
+                                    x-text="$t('common.cancel')"></button>
+                            <button type="button" @click="extractOcrText()" :disabled="!ocr.file || ocr.loading"
+                                    class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
+                                    x-text="ocr.loading ? $t('chapters.ocr_extracting') : $t('chapters.ocr_extract')"></button>
+                        </div>
+                    </div>
+                </template>
+
+                <template x-if="ocr.text">
+                    <div class="mt-4 space-y-3">
+                        <label class="block text-sm font-medium text-gray-700" x-text="$t('chapters.ocr_result_label')"></label>
+                        <textarea x-model="ocr.text" rows="8"
+                                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+
+                        <div class="mt-4 flex flex-wrap justify-end gap-3">
+                            <button type="button" @click="closeOcr()"
+                                    class="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
+                                    x-text="$t('common.cancel')"></button>
+                            <button type="button" @click="applyOcr('copy')"
+                                    class="rounded-md px-3 py-2 text-sm font-medium text-indigo-600 hover:text-indigo-800"
+                                    x-text="$t('chapters.ocr_copy')"></button>
+                            <button type="button" @click="applyOcr('append')"
+                                    class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-200"
+                                    x-text="$t('chapters.ocr_append')"></button>
+                            <button type="button" @click="applyOcr('set')"
+                                    class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                                    x-text="$t('chapters.ocr_set')"></button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -272,6 +333,8 @@
                 settingsForm: {},
                 settingsSaving: false,
                 exporting: false,
+
+                ocr: { open: false, file: null, text: null, loading: false, error: null },
 
                 init() {
                     this.$watch('$store.auth.ready', () => this.guard());
@@ -303,6 +366,7 @@
                     this.selected = chapter;
                     this.form = { title: chapter.title, content: chapter.content ?? '' };
                     this.errors = {};
+                    this.ocr = { open: false, file: null, text: null, loading: false, error: null };
                 },
 
                 async addChapter() {
@@ -334,6 +398,52 @@
                     } finally {
                         this.saving = false;
                     }
+                },
+
+                openOcr() {
+                    this.ocr = { open: true, file: null, text: null, loading: false, error: null };
+                },
+
+                closeOcr() {
+                    this.ocr.open = false;
+                },
+
+                onOcrFileChange(e) {
+                    this.ocr.file = e.target.files[0] ?? null;
+                    this.ocr.error = null;
+                },
+
+                async extractOcrText() {
+                    if (!this.ocr.file || !this.selected) return;
+                    this.ocr.loading = true;
+                    this.ocr.error = null;
+                    try {
+                        const body = new FormData();
+                        body.append('image', this.ocr.file);
+                        const data = await window.auth.fetchJson(`/api/chapters/${this.selected.id}/ocr`, {
+                            method: 'POST',
+                            body,
+                        });
+                        this.ocr.text = data.text;
+                    } catch (e) {
+                        this.ocr.error = e.data?.errors?.image?.[0] || this.$t('chapters.ocr_error');
+                    } finally {
+                        this.ocr.loading = false;
+                    }
+                },
+
+                applyOcr(mode) {
+                    if (mode === 'set') {
+                        this.form.content = this.ocr.text;
+                    } else if (mode === 'append') {
+                        this.form.content = this.form.content ? `${this.form.content}\n${this.ocr.text}` : this.ocr.text;
+                    } else if (mode === 'copy') {
+                        navigator.clipboard.writeText(this.ocr.text);
+                        window.dispatchEvent(new CustomEvent('app:toast', {
+                            detail: { message: this.$t('chapters.ocr_copied'), type: 'success' },
+                        }));
+                    }
+                    this.closeOcr();
                 },
 
                 async saveSettings() {

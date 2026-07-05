@@ -10,6 +10,16 @@
 
 import { getLocale, translate } from './i18n';
 
+// Page shells served behind the `auth` middleware (see routes/web.php). A 401
+// on one of these means the session expired, so the visitor is sent to /login;
+// on public pages a 401 is expected for guests and is ignored.
+const PROTECTED_PREFIXES = ['/dashboard', '/profile', '/admin', '/books'];
+
+function isProtectedPage() {
+    const path = window.location.pathname;
+    return PROTECTED_PREFIXES.some(p => path === p || path.startsWith(p + '/'));
+}
+
 function xsrfToken() {
     const match = document.cookie.split('; ').find(c => c.startsWith('XSRF-TOKEN='));
     return match ? decodeURIComponent(match.split('=')[1]) : null;
@@ -51,9 +61,14 @@ export async function fetchJson(url, options = {}) {
     const data = contentType.includes('application/json') ? await response.json() : null;
 
     if (!response.ok) {
-        // Auto-toast every non-422 error. 422s carry field-level validation messages
-        // that each form handles inline — they are intentionally excluded here.
-        if (response.status !== 422) {
+        // 401s never toast: on protected pages the session expired, so go to
+        // /login; on public pages they are expected for guests and ignored.
+        if (response.status === 401) {
+            if (isProtectedPage()) window.location.href = '/login';
+        }
+        // Auto-toast every other non-422 error. 422s carry field-level validation
+        // messages that each form handles inline — intentionally excluded here.
+        else if (response.status !== 422) {
             window.dispatchEvent(new CustomEvent('app:toast', {
                 detail: { message: data?.message || `Request failed (${response.status})`, type: 'error' },
             }));

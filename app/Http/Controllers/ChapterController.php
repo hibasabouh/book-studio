@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DestroyChapterRequest;
 use App\Http\Requests\IndexChapterRequest;
+use App\Http\Requests\OcrChapterRequest;
 use App\Http\Requests\ReorderChaptersRequest;
 use App\Http\Requests\ShowChapterRequest;
 use App\Http\Requests\StoreChapterRequest;
@@ -11,6 +12,7 @@ use App\Http\Requests\UpdateChapterRequest;
 use App\Http\Resources\ChapterResource;
 use App\Models\Book;
 use App\Models\Chapter;
+use App\Services\OcrService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -62,5 +64,12 @@ class ChapterController extends Controller
         }
 
         return response()->json(['message' => 'OK']);
+    }
+
+    public function ocr(OcrChapterRequest $request, Chapter $chapter, OcrService $ocr): JsonResponse
+    {
+        $text = $ocr->extractText($request->file('image'), $request->validated('language'));
+
+        return response()->json(['text' => $text]);
     }
 }

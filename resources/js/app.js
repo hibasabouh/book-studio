@@ -1,13 +1,15 @@
 import './bootstrap';
 
 import Alpine from 'alpinejs';
+import Sortable from 'sortablejs';
 import { fetchJson } from './auth';
 import { getLocale, setLocale, translate, isRtl, applyDir, SUPPORTED } from './i18n';
 
 window.Alpine = Alpine;
 
-// Expose fetchJson for inline Blade scripts.
+// Expose fetchJson and Sortable for inline Blade scripts.
 window.auth = { fetchJson };
+window.Sortable = Sortable;
 
 /**
  * Shared guard for admin pages. Redirects unauthenticated visitors to /login and

@@ -52,11 +52,20 @@
                     <p class="px-4 py-6 text-center text-sm text-gray-400" x-text="$t('chapters.empty')"></p>
                 </template>
 
-                <ul class="divide-y divide-gray-100">
+                <ul class="divide-y divide-gray-100" x-ref="chapterList">
                     <template x-for="(chapter, index) in chapters" :key="chapter.id">
                         <li @click="select(chapter); settingsOpen = false"
                             :class="!settingsOpen && selected?.id === chapter.id ? 'bg-indigo-50' : 'hover:bg-gray-50'"
                             class="flex cursor-pointer items-center gap-1 px-2 py-2">
+
+                            {{-- Drag handle --}}
+                            <span class="drag-handle flex-shrink-0 cursor-grab touch-none rounded p-0.5 text-gray-300 hover:text-gray-500 active:cursor-grabbing"
+                                  @click.stop
+                                  :title="$t('chapters.drag_handle')">
+                                <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M7 4a1 1 0 11-2 0 1 1 0 012 0zM7 10a1 1 0 11-2 0 1 1 0 012 0zM7 16a1 1 0 11-2 0 1 1 0 012 0zM15 4a1 1 0 11-2 0 1 1 0 012 0zM15 10a1 1 0 11-2 0 1 1 0 012 0zM15 16a1 1 0 11-2 0 1 1 0 012 0z"/>
+                                </svg>
+                            </span>
 
                             {{-- Reorder arrows --}}
                             <div class="flex flex-col" @click.stop>
@@ -73,6 +82,9 @@
                                     <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                                 </button>
                             </div>
+
+                            {{-- Order --}}
+                            {{-- <span class="flex-shrink-0 text-xs tabular-nums text-gray-400" x-text="index + 1"></span> --}}
 
                             {{-- Title --}}
                             <span class="flex-1 truncate text-sm text-gray-800" x-text="chapter.title"></span>
@@ -104,11 +116,13 @@
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_author')"></label>
                                     <input type="text" x-model="settingsForm.author"
+                                           :dir="settingsForm.text_direction || 'ltr'"
                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_subtitle')"></label>
                                     <input type="text" x-model="settingsForm.subtitle"
+                                           :dir="settingsForm.text_direction || 'ltr'"
                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
                                 </div>
                             </div>
@@ -231,6 +245,7 @@
                                x-text="$t('chapters.field_title')"></label>
                         <input type="text"
                                x-model="form.title"
+                               :dir="settingsForm.text_direction || 'ltr'"
                                class="block w-full rounded-md border-gray-300 text-lg font-semibold shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
                         <p class="mt-1 text-xs text-red-600" x-show="fieldError('title')" x-text="fieldError('title')"></p>
                     </div>
@@ -248,6 +263,7 @@
                             </button>
                         </div>
                         <textarea x-model="form.content"
+                                  :dir="settingsForm.text_direction || 'ltr'"
                                   class="flex-1 block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                   placeholder=""></textarea>
                         <p class="mt-1 text-xs text-red-600" x-show="fieldError('content')" x-text="fieldError('content')"></p>
@@ -339,6 +355,18 @@
                 init() {
                     this.$watch('$store.auth.ready', () => this.guard());
                     this.guard();
+                    this.$nextTick(() => this.initSortable());
+                },
+
+                initSortable() {
+                    if (!this.$refs.chapterList) return;
+                    window.Sortable.create(this.$refs.chapterList, {
+                        handle: '.drag-handle',
+                        animation: 150,
+                        onEnd: (evt) => {
+                            if (evt.oldIndex !== evt.newIndex) this.reorder(evt.oldIndex, evt.newIndex);
+                        },
+                    });
                 },
                 guard() {
                     if (!this.$store.auth.ready) return;
@@ -479,19 +507,20 @@
 
                 async moveUp(index) {
                     if (index === 0) return;
-                    await this.swap(index, index - 1);
+                    await this.reorder(index, index - 1);
                 },
 
                 async moveDown(index) {
                     if (index === this.chapters.length - 1) return;
-                    await this.swap(index, index + 1);
+                    await this.reorder(index, index + 1);
                 },
 
-                async swap(i, j) {
-                    const tmp = this.chapters[i];
-                    this.chapters[i] = this.chapters[j];
-                    this.chapters[j] = tmp;
-                    this.chapters = [...this.chapters];
+                async reorder(oldIndex, newIndex) {
+                    const previous = this.chapters;
+                    const updated = [...this.chapters];
+                    const [moved] = updated.splice(oldIndex, 1);
+                    updated.splice(newIndex, 0, moved);
+                    this.chapters = updated;
 
                     try {
                         await window.auth.fetchJson(`/api/books/${this.bookId}/chapters/reorder`, {
@@ -499,10 +528,7 @@
                             body: JSON.stringify({ ids: this.chapters.map(c => c.id) }),
                         });
                     } catch (e) {
-                        const tmp2 = this.chapters[i];
-                        this.chapters[i] = this.chapters[j];
-                        this.chapters[j] = tmp2;
-                        this.chapters = [...this.chapters];
+                        this.chapters = previous;
                     }
                 },
 

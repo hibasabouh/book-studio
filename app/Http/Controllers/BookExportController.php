@@ -16,11 +16,13 @@ class BookExportController extends Controller
 
         $pdf = $service->generatePdf($book);
 
-        $filename = Str::slug($book->title, '-').'.pdf';
+        $safeTitle = trim(preg_replace('/[\/\\\\:*?"<>|]+/u', '', $book->title));
+        $asciiFilename = (Str::slug($book->title, '-') ?: 'book').'.pdf';
+        $utf8Filename = ($safeTitle ?: 'book').'.pdf';
 
         return response($pdf, 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+            'Content-Disposition' => "attachment; filename=\"{$asciiFilename}\"; filename*=UTF-8''".rawurlencode($utf8Filename),
         ]);
     }
 }

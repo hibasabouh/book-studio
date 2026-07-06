@@ -146,6 +146,7 @@
   "books.chapters_count": "فصول",
   "books.error": "حدث خطأ ما. حاول مرة أخرى.",
   "chapters.add": "إضافة فصل",
+  "chapters.drag_handle": "اسحب لإعادة الترتيب",
   "chapters.empty": "لا توجد فصول بعد. أضف أول فصل لك.",
   "chapters.no_selection": "اختر فصلاً من القائمة لبدء التحرير.",
   "chapters.field_title": "عنوان الفصل",

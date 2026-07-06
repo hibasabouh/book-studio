@@ -146,6 +146,7 @@
   "books.chapters_count": "chapitres",
   "books.error": "Une erreur s'est produite. Veuillez réessayer.",
   "chapters.add": "Ajouter un chapitre",
+  "chapters.drag_handle": "Glisser pour réorganiser",
   "chapters.empty": "Aucun chapitre pour l'instant. Ajoutez le premier.",
   "chapters.no_selection": "Sélectionnez un chapitre dans la liste pour commencer à éditer.",
   "chapters.field_title": "Titre du chapitre",

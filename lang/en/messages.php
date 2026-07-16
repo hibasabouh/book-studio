@@ -18,4 +18,6 @@ return [
     'cannot_delete_self'     => 'You cannot delete your own account.',
     'cannot_change_own_role' => 'You cannot change your own role.',
     'ocr_failed' => 'Could not extract text from the uploaded image.',
+    'contact_sent' => 'Thanks — your message has been sent.',
+    'contact_message_deleted' => 'Message deleted.',
 ];

@@ -1,8 +1,11 @@
 <?php
 
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminContactMessageController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -10,6 +13,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('landing');
 });
+
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
+
+Route::get('/contact', [ContactController::class, 'show'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:6,1');
 
 // Thin Blade page shells. They render the form and bootstrap auth client-side;
 // the actual credential exchange happens via fetch to the routes below.
@@ -35,9 +45,11 @@ Route::middleware('auth')->group(function () {
     Route::middleware('active')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
-        Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
-        Route::get('/admin/users/{user}', [AdminController::class, 'showUser'])->name('admin.users.show');
+        Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+        Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users');
+        Route::get('/admin/users/{user}', [AdminUserController::class, 'show'])->name('admin.users.show');
+        Route::get('/admin/messages', [AdminContactMessageController::class, 'index'])->name('admin.messages');
+        Route::get('/admin/messages/{message}', [AdminContactMessageController::class, 'show'])->name('admin.messages.show');
         Route::get('/books', [BookController::class, 'index'])->name('books.library');
         Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
     });

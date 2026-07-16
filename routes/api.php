@@ -1,6 +1,8 @@
 <?php
 
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminContactMessageController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookExportController;
@@ -47,11 +49,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Admin-only data.
         Route::middleware('can:admin')->prefix('admin')->group(function () {
-            Route::get('/stats', [AdminController::class, 'stats']);
-            Route::get('/users', [AdminController::class, 'users']);
-            Route::get('/users/{user}', [AdminController::class, 'userDetails']);
-            Route::patch('/users/{user}', [AdminController::class, 'updateUser']);
-            Route::delete('/users/{user}', [AdminController::class, 'destroyUser']);
+            Route::get('/stats', [AdminDashboardController::class, 'stats']);
+            Route::get('/users', [AdminUserController::class, 'index']);
+            Route::get('/users/{user}', [AdminUserController::class, 'details']);
+            Route::patch('/users/{user}', [AdminUserController::class, 'update']);
+            Route::delete('/users/{user}', [AdminUserController::class, 'destroy']);
+
+            Route::get('/messages', [AdminContactMessageController::class, 'index']);
+            Route::get('/messages/{message}', [AdminContactMessageController::class, 'details']);
+            Route::patch('/messages/{message}', [AdminContactMessageController::class, 'update']);
+            Route::delete('/messages/{message}', [AdminContactMessageController::class, 'destroy']);
         });
 
         // Books management

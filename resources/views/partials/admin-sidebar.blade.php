@@ -16,5 +16,12 @@
             </svg>
             <span x-text="$t('admin.nav_users')"></span>
         </a>
+        <a href="/admin/messages"
+           class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium {{ $active === 'messages' ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            <span x-text="$t('admin.nav_messages')"></span>
+        </a>
     </nav>
 </aside>

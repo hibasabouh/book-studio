@@ -23,5 +23,22 @@
                 </div>
             </template>
         </div>
+
+        <p class="mt-8 text-sm text-gray-500">
+            <span x-text="$t('landing.portfolio_note')"></span>
+            <a href="https://hibasabouh.dev" target="_blank" rel="noopener" class="font-medium text-indigo-600 hover:text-indigo-500">Hiba Sabouh</a>
+            &middot;
+            <a href="/about" class="font-medium text-indigo-600 hover:text-indigo-500" x-text="$t('landing.about_link')"></a>
+        </p>
+    </div>
+
+    <div class="mx-auto max-w-3xl pb-16 sm:pb-24">
+        <div class="rounded-lg bg-indigo-50 p-6 text-center ring-1 ring-indigo-100 sm:p-8" x-data x-cloak>
+            <h2 class="text-lg font-semibold text-gray-900" x-text="$t('landing.cta_title')"></h2>
+            <p class="mx-auto mt-2 max-w-xl text-sm text-gray-600" x-text="$t('landing.cta_body')"></p>
+            <a href="/contact"
+               class="mt-4 inline-flex rounded-md bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+               x-text="$t('landing.cta_button')"></a>
+        </div>
     </div>
 @endsection

@@ -13,21 +13,12 @@ use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 
-class AdminController extends Controller
+class AdminUserController extends Controller
 {
-    /**
-     * Render the admin dashboard shell (admin enforced client-side + by the
-     * `can:admin` gate on the data endpoints).
-     */
-    public function index(): View
-    {
-        return view('admin.index');
-    }
-
     /**
      * Render the user management shell.
      */
-    public function users(IndexUserRequest $request): JsonResponse|View
+    public function index(IndexUserRequest $request): JsonResponse|View
     {
         // Web page is a thin shell; it fetches /api/admin/users itself.
         if (! $request->expectsJson()) {
@@ -53,7 +44,7 @@ class AdminController extends Controller
      * Render the user details shell. Stats and books are hydrated client-side from
      * the JSON endpoint below.
      */
-    public function showUser(User $user): View
+    public function show(User $user): View
     {
         return view('admin.user-details', ['userId' => $user->id]);
     }
@@ -61,7 +52,7 @@ class AdminController extends Controller
     /**
      * User details payload: the user record, content stats, and their books.
      */
-    public function userDetails(User $user): JsonResponse
+    public function details(User $user): JsonResponse
     {
         $booksTotal = $user->books()->count();
         $chaptersTotal = Chapter::whereHas('book', fn ($q) => $q->where('user_id', $user->id))->count();
@@ -83,7 +74,7 @@ class AdminController extends Controller
      * applied. Admins cannot change their own role (so they can't accidentally
      * lock themselves out of the admin area).
      */
-    public function updateUser(UpdateUserRequest $request, User $user): JsonResponse
+    public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
         $validated = $request->validated();
 
@@ -132,7 +123,7 @@ class AdminController extends Controller
     /**
      * Delete a user. Admins cannot delete their own account here.
      */
-    public function destroyUser(User $user): JsonResponse
+    public function destroy(User $user): JsonResponse
     {
         if ($user->is(auth()->user())) {
             return response()->json(['message' => __('messages.cannot_delete_self')], 422);
@@ -141,19 +132,5 @@ class AdminController extends Controller
         $user->delete();
 
         return response()->json(['message' => __('messages.user_deleted')]);
-    }
-
-    /**
-     * Admin overview stats.
-     */
-    public function stats(): JsonResponse
-    {
-        return response()->json([
-            'users_total' => User::count(),
-            'users_verified' => User::whereNotNull('email_verified_at')->count(),
-            'recent_users' => UserResource::collection(
-                User::latest()->take(5)->get()
-            ),
-        ]);
     }
 }

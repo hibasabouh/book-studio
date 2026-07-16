@@ -7,16 +7,24 @@
                     {{ config('app.name', 'Book Studio') }}
                 </a>
 
-                <div class="hidden items-center gap-4 sm:flex" x-show="$store.auth.check">
-                    {{-- Admin-mode navigation --}}
-                    <a href="/admin" x-show="$store.auth.user?.role === 'admin' && $store.mode.isAdmin"
-                       class="text-sm font-medium text-gray-600 hover:text-gray-900" x-text="$t('nav.dashboard')"></a>
+                <div class="hidden items-center gap-4 sm:flex">
+                    {{-- Always-visible pages: portfolio context for every visitor --}}
+                    <a href="/about" class="text-sm font-medium text-gray-600 hover:text-gray-900" x-text="$t('nav.about')"></a>
+                    <a href="/contact" class="text-sm font-medium text-gray-600 hover:text-gray-900" x-text="$t('nav.contact')"></a>
 
-                    {{-- User-mode navigation (everyone by default; admins while in user mode) --}}
-                    <template x-if="!($store.auth.user?.role === 'admin' && $store.mode.isAdmin)">
+                    <template x-if="$store.auth.check">
                         <div class="flex items-center gap-4">
-                            <a href="/dashboard" class="text-sm font-medium text-gray-600 hover:text-gray-900" x-text="$t('nav.dashboard')"></a>
-                            <a href="/books" class="text-sm font-medium text-gray-600 hover:text-gray-900" x-text="$t('nav.library')"></a>
+                            {{-- Admin-mode navigation --}}
+                            <a href="/admin" x-show="$store.auth.user?.role === 'admin' && $store.mode.isAdmin"
+                               class="text-sm font-medium text-gray-600 hover:text-gray-900" x-text="$t('nav.dashboard')"></a>
+
+                            {{-- User-mode navigation (everyone by default; admins while in user mode) --}}
+                            <template x-if="!($store.auth.user?.role === 'admin' && $store.mode.isAdmin)">
+                                <div class="flex items-center gap-4">
+                                    <a href="/dashboard" class="text-sm font-medium text-gray-600 hover:text-gray-900" x-text="$t('nav.dashboard')"></a>
+                                    <a href="/books" class="text-sm font-medium text-gray-600 hover:text-gray-900" x-text="$t('nav.library')"></a>
+                                </div>
+                            </template>
                         </div>
                     </template>
                 </div>

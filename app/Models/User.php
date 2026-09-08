@@ -31,6 +31,16 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
+     * Mirrors the DB default so a freshly created user has a status
+     * before being reloaded (UserResource reads it right after save).
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'status' => 'active',
+    ];
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>

@@ -63,6 +63,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Books management
         Route::apiResource('books', BookController::class);
+        Route::post('books/{book}/cover', [BookController::class, 'updateCover']);
+        Route::delete('books/{book}/cover', [BookController::class, 'destroyCover']);
 
         // Book settings
         Route::get('books/{book}/setting', [BookSettingController::class, 'show']);

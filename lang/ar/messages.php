@@ -18,6 +18,7 @@ return [
     'cannot_delete_self'     => 'لا يمكنك حذف حسابك الخاص.',
     'cannot_change_own_role' => 'لا يمكنك تغيير دورك الخاص.',
     'ocr_failed' => 'تعذر استخراج النص من الصورة المرفوعة.',
+    'cover_unreadable' => 'تعذّرت قراءة صورة الغلاف المرفوعة.',
     'contact_sent' => 'شكرًا لك — تم إرسال رسالتك.',
     'contact_message_deleted' => 'تم حذف الرسالة.',
 ];

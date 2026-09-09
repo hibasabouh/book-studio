@@ -3,6 +3,7 @@
 @php
     use App\Enums\BookFont;
     use App\Enums\PdfTemplate;
+    use App\Services\CoverImageService;
 
     // Single source of truth for the pickers: options are rendered statically
     // from the enums (below) so the saved value preselects reliably and the
@@ -12,7 +13,8 @@
 @endphp
 
 @section('content')
-    <div x-data="bookEditor({{ $book->id }})" x-init="init()" class="flex h-[calc(100vh-4rem)] overflow-hidden" x-cloak>
+    <div x-data="bookEditor({{ $book->id }}, @js(file_url($book->cover_path)), {{ CoverImageService::aspectRatio() }})"
+         x-init="init()" class="flex h-[calc(100vh-4rem)] overflow-hidden" x-cloak>
 
         {{-- Sidebar: chapter list --}}
         <aside class="flex w-64 flex-shrink-0 flex-col border-r border-gray-200 bg-white">
@@ -108,6 +110,38 @@
                 <div class="flex flex-1 flex-col overflow-y-auto p-6">
                     <div class="mx-auto w-full max-w-2xl space-y-8">
                         <h2 class="text-lg font-semibold text-gray-900" x-text="$t('settings.title')"></h2>
+
+                        {{-- Cover image --}}
+                        <section>
+                            <h3 class="mb-3 text-xs font-medium uppercase tracking-wide text-gray-500" x-text="$t('cover.section')"></h3>
+                            <div class="flex items-start gap-4 rounded-lg bg-white p-4 ring-1 ring-gray-200">
+                                <div class="w-24 flex-shrink-0 overflow-hidden rounded-md bg-gray-100 ring-1 ring-gray-200"
+                                     :style="`aspect-ratio: ${coverRatio}`">
+                                    <template x-if="coverUrl">
+                                        <img :src="coverUrl" alt="" class="h-full w-full object-cover">
+                                    </template>
+                                    <template x-if="!coverUrl">
+                                        <span class="flex h-full items-center justify-center px-2 text-center text-xs text-gray-400"
+                                              x-text="$t('cover.empty')"></span>
+                                    </template>
+                                </div>
+
+                                <div class="flex-1 space-y-3">
+                                    <p class="text-sm text-gray-500" x-text="$t('cover.hint')"></p>
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <label class="cursor-pointer rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-gray-300 hover:bg-gray-50">
+                                            <span x-text="coverUrl ? $t('cover.replace') : $t('cover.upload')"></span>
+                                            <input type="file" accept="image/jpeg,image/png,image/webp" class="hidden"
+                                                   @change="pickCover($event)">
+                                        </label>
+                                        <button type="button" x-show="coverUrl" @click="removeCover()" :disabled="cover.saving"
+                                                class="rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700 disabled:opacity-50"
+                                                x-text="$t('cover.remove')"></button>
+                                    </div>
+                                    <p class="text-xs text-red-600" x-show="cover.error" x-text="cover.error"></p>
+                                </div>
+                            </div>
+                        </section>
 
                         {{-- Metadata --}}
                         <section>
@@ -278,6 +312,49 @@
             </template>
         </main>
 
+        {{-- Cover crop modal: the frame is the preview — what you see is what is cut. --}}
+        <div x-show="cover.open" x-cloak
+             class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 p-4"
+             @keydown.escape.window="closeCropper()">
+            <div class="w-full max-w-xs rounded-lg bg-white p-6 shadow-xl" @click.outside="closeCropper()">
+                <h2 class="text-base font-semibold text-gray-900" x-text="$t('cover.crop_title')"></h2>
+                <p class="mt-1 text-xs text-gray-500" x-text="$t('cover.crop_hint')"></p>
+
+                <template x-if="cover.cropper">
+                    <div class="mt-4 space-y-3">
+                        <div class="mx-auto touch-none select-none overflow-hidden rounded-md bg-gray-900"
+                             :class="cover.cropper.dragging ? 'cursor-grabbing' : 'cursor-grab'"
+                             :style="`width:${cover.cropper.frameWidth}px;height:${cover.cropper.frameHeight}px`"
+                             @pointerdown.prevent="cover.cropper.start($event)"
+                             @pointermove="cover.cropper.move($event)"
+                             @pointerup="cover.cropper.end()"
+                             @pointercancel="cover.cropper.end()"
+                             @wheel.prevent="cover.cropper.wheel($event)">
+                            <img :src="cover.cropper.source.src" :style="cover.cropper.style"
+                                 alt="" draggable="false" class="max-w-none">
+                        </div>
+
+                        <input type="range" class="w-full accent-indigo-600" step="0.0001"
+                               :min="cover.cropper.minScale" :max="cover.cropper.maxScale"
+                               :value="cover.cropper.scale"
+                               @input="cover.cropper.zoomTo(Number($event.target.value))"
+                               :aria-label="$t('cover.zoom')">
+                    </div>
+                </template>
+
+                <p class="mt-2 text-xs text-red-600" x-show="cover.error" x-text="cover.error"></p>
+
+                <div class="mt-4 flex justify-end gap-3">
+                    <button type="button" @click="closeCropper()"
+                            class="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
+                            x-text="$t('common.cancel')"></button>
+                    <button type="button" @click="saveCover()" :disabled="cover.saving"
+                            class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
+                            x-text="cover.saving ? $t('cover.saving') : $t('cover.apply')"></button>
+                </div>
+            </div>
+        </div>
+
         {{-- OCR import modal --}}
         <div x-show="ocr.open" x-cloak
              class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 p-4"
@@ -334,9 +411,15 @@
 
 @push('scripts')
     <script>
-        function bookEditor(bookId) {
+        // Crop frame width in CSS pixels; its height follows the cover ratio.
+        const COVER_FRAME_WIDTH = 240;
+
+        function bookEditor(bookId, coverUrl, coverRatio) {
             return {
                 bookId,
+                coverUrl,
+                coverRatio,
+                cover: { open: false, file: null, cropper: null, saving: false, error: null },
                 chapters: [],
                 ready: false,
                 loaded: false,
@@ -425,6 +508,70 @@
                         if (e.status === 422) this.errors = e.data?.errors || {};
                     } finally {
                         this.saving = false;
+                    }
+                },
+
+                /** Load the chosen file into the crop frame; nothing is uploaded yet. */
+                async pickCover(event) {
+                    const file = event.target.files[0];
+                    event.target.value = '';
+                    if (!file) return;
+
+                    this.cover.error = null;
+                    try {
+                        const source = await window.cropper.loadImage(file);
+                        this.cover.file = file;
+                        this.cover.cropper = window.cropper.createCropper(
+                            source,
+                            COVER_FRAME_WIDTH,
+                            Math.round(COVER_FRAME_WIDTH / this.coverRatio),
+                        );
+                        this.cover.open = true;
+                    } catch (e) {
+                        this.cover.error = this.$t('cover.unreadable');
+                    }
+                },
+
+                closeCropper() {
+                    this.cover.cropper?.release();
+                    this.cover = { open: false, file: null, cropper: null, saving: false, error: null };
+                },
+
+                /** Upload the original file plus the framed rectangle; the server does the cut. */
+                async saveCover() {
+                    if (!this.cover.cropper) return;
+                    this.cover.saving = true;
+                    this.cover.error = null;
+
+                    const rect = this.cover.cropper.rect();
+                    const body = new FormData();
+                    body.append('cover', this.cover.file);
+                    body.append('crop_x', rect.x);
+                    body.append('crop_y', rect.y);
+                    body.append('crop_width', rect.width);
+                    body.append('crop_height', rect.height);
+
+                    try {
+                        const data = await window.auth.fetchJson(`/api/books/${this.bookId}/cover`, { method: 'POST', body });
+                        this.coverUrl = data.data.cover_url;
+                        this.closeCropper();
+                        window.dispatchEvent(new CustomEvent('app:toast', {
+                            detail: { message: this.$t('cover.saved'), type: 'success' },
+                        }));
+                    } catch (e) {
+                        this.cover.error = e.data?.errors?.cover?.[0] || this.$t('cover.error');
+                    } finally {
+                        this.cover.saving = false;
+                    }
+                },
+
+                async removeCover() {
+                    if (!await this.$store.confirm.ask(this.$t('cover.confirm_remove'))) return;
+                    try {
+                        await window.auth.fetchJson(`/api/books/${this.bookId}/cover`, { method: 'DELETE' });
+                        this.coverUrl = null;
+                    } catch (e) {
+                        this.cover.error = this.$t('cover.error');
                     }
                 },
 

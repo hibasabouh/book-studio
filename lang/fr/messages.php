@@ -18,6 +18,7 @@ return [
     'cannot_delete_self'     => 'Vous ne pouvez pas supprimer votre propre compte.',
     'cannot_change_own_role' => 'Vous ne pouvez pas modifier votre propre rôle.',
     'ocr_failed' => 'Impossible d\'extraire le texte de l\'image envoyée.',
+    'cover_unreadable' => 'Impossible de lire l\'image de couverture envoyée.',
     'contact_sent' => 'Merci — votre message a été envoyé.',
     'contact_message_deleted' => 'Message supprimé.',
 ];

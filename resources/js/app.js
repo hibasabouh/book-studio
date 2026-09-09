@@ -3,13 +3,15 @@ import './bootstrap';
 import Alpine from 'alpinejs';
 import Sortable from 'sortablejs';
 import { fetchJson } from './auth';
+import { createCropper, loadImage } from './cropper';
 import { getLocale, setLocale, translate, isRtl, applyDir, SUPPORTED } from './i18n';
 
 window.Alpine = Alpine;
 
-// Expose fetchJson and Sortable for inline Blade scripts.
+// Expose the shared helpers for inline Blade scripts.
 window.auth = { fetchJson };
 window.Sortable = Sortable;
+window.cropper = { createCropper, loadImage };
 
 /**
  * Shared guard for admin pages. Redirects unauthenticated visitors to /login and

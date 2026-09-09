@@ -16,6 +16,7 @@ class Book extends Model
     protected $fillable = [
         'title',
         'description',
+        'cover_path',
     ];
 
     public function user(): BelongsTo

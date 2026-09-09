@@ -19,6 +19,7 @@ class BookResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
+            'cover_url' => file_url($this->cover_path),
             'chapters_count' => $this->whenCounted('chapters'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

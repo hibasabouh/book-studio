@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DestroyBookCoverRequest;
 use App\Http\Requests\DestroyBookRequest;
 use App\Http\Requests\IndexBookRequest;
 use App\Http\Requests\ShowBookRequest;
 use App\Http\Requests\StoreBookRequest;
+use App\Http\Requests\UpdateBookCoverRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Http\Resources\BookCollection;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
+use App\Services\CoverImageService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 
@@ -71,6 +74,30 @@ class BookController extends Controller
     {
         $book->delete();
 
+        delete_file_if_exist($book->cover_path);
+
         return response()->json(['message' => __('messages.book_deleted')]);
+    }
+
+    public function updateCover(UpdateBookCoverRequest $request, Book $book, CoverImageService $covers): BookResource
+    {
+        $previous = $book->cover_path;
+
+        $book->cover_path = $covers->store($request->file('cover'), $request->crop());
+        $book->save();
+
+        delete_file_if_exist($previous);
+
+        return new BookResource($book->loadCount('chapters'));
+    }
+
+    public function destroyCover(DestroyBookCoverRequest $request, Book $book): BookResource
+    {
+        delete_file_if_exist($book->cover_path);
+
+        $book->cover_path = null;
+        $book->save();
+
+        return new BookResource($book->loadCount('chapters'));
     }
 }

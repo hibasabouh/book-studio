@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\BookFont;
 use App\Models\Book;
 use App\Support\ScriptFontFormatter;
+use Illuminate\Support\Facades\Storage;
 use Mpdf\Config\ConfigVariables;
 use Mpdf\Config\FontVariables;
 use Mpdf\Mpdf;
@@ -12,6 +13,10 @@ use Mpdf\MpdfException;
 
 class BookExportService
 {
+    private const PAGE_WIDTH = 210;
+
+    private const PAGE_HEIGHT = 297;
+
     /**
      * @throws MpdfException
      */
@@ -53,6 +58,12 @@ class BookExportService
             $mpdf->SetDirectionality('rtl');
         }
 
+        $coverImage = $this->coverImagePath($book);
+
+        if ($coverImage) {
+            $this->writeCoverPage($mpdf, $coverImage);
+        }
+
         if ($setting->show_page_numbers) {
             $align = $isRtl ? 'right' : 'center';
             $mpdf->SetHTMLFooter(
@@ -73,5 +84,21 @@ class BookExportService
         $mpdf->WriteHTML($html);
 
         return $mpdf->Output('', 'S');
+    }
+
+    private function writeCoverPage(Mpdf $mpdf, string $image): void
+    {
+        $mpdf->AddPage();
+        $mpdf->Image($image, 0, 0, self::PAGE_WIDTH, self::PAGE_HEIGHT, '', '', true, false);
+        $mpdf->AddPageByArray(['resetpagenum' => 1]);
+    }
+
+    private function coverImagePath(Book $book): ?string
+    {
+        if (! $book->cover_path || ! Storage::disk('public')->exists($book->cover_path)) {
+            return null;
+        }
+
+        return Storage::disk('public')->path($book->cover_path);
     }
 }

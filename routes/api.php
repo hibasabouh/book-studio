@@ -72,6 +72,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Book export
         Route::get('books/{book}/export', [BookExportController::class, 'download']);
+        Route::get('books/{book}/preview', [BookExportController::class, 'preview']);
 
         // Chapters management (shallow: index/store nested, show/update/destroy flat)
         Route::post('books/{book}/chapters/reorder', [ChapterController::class, 'reorder']);

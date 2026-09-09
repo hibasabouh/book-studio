@@ -21,6 +21,16 @@
             <div class="flex items-center justify-between border-b border-gray-200 px-4 py-3">
                 <a href="/books" class="text-sm text-gray-500 hover:text-gray-700">← <span x-text="$t('nav.library')"></span></a>
                 <div class="flex items-center gap-1">
+                    {{-- Preview PDF --}}
+                    <button @click="openPreview()"
+                            :disabled="preview.loading"
+                            :title="$t('preview.button')"
+                            class="rounded p-1 text-gray-400 hover:text-indigo-600 disabled:opacity-50">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                    </button>
                     {{-- Export PDF --}}
                     <button @click="exportPdf()"
                             :disabled="exporting"
@@ -355,6 +365,45 @@
             </div>
         </div>
 
+        {{-- PDF preview modal: the exported document itself, rendered inline. --}}
+        <div x-show="preview.open" x-cloak
+             class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 p-4"
+             @keydown.escape.window="closePreview()">
+            <div class="flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-lg bg-white shadow-xl"
+                 @click.outside="closePreview()">
+                <div class="flex items-center justify-between border-b border-gray-200 px-4 py-3">
+                    <div class="flex items-baseline gap-2">
+                        <h2 class="text-base font-semibold text-gray-900" x-text="$t('preview.title')"></h2>
+                        <span class="text-xs text-gray-500" x-show="preview.pages"
+                              x-text="`${preview.pages} ${$t('preview.pages_label')}`"></span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button type="button" @click="exportPdf()" :disabled="exporting"
+                                class="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
+                                x-text="$t('preview.download')"></button>
+                        <button type="button" @click="closePreview()"
+                                class="rounded p-1 text-gray-400 hover:text-gray-600"
+                                :title="$t('common.close')">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Pages are drawn into this container as canvases by pdf-preview.js. --}}
+                <div class="relative flex-1 overflow-y-auto bg-gray-100 p-4">
+                    <div x-ref="previewPages"></div>
+
+                    <div x-show="preview.loading || preview.error"
+                         class="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-gray-100 px-6 text-center">
+                        <p class="text-sm" :class="preview.error ? 'text-red-600' : 'text-gray-500'"
+                           x-text="preview.error || $t('preview.loading')"></p>
+                        <p class="max-w-md break-words font-mono text-xs text-gray-500"
+                           x-show="preview.detail" x-text="preview.detail"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {{-- OCR import modal --}}
         <div x-show="ocr.open" x-cloak
              class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/40 p-4"
@@ -414,6 +463,14 @@
         // Crop frame width in CSS pixels; its height follows the cover ratio.
         const COVER_FRAME_WIDTH = 240;
 
+        function base64ToBytes(base64) {
+            const binary = atob(base64);
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+
+            return bytes;
+        }
+
         function bookEditor(bookId, coverUrl, coverRatio) {
             return {
                 bookId,
@@ -432,6 +489,8 @@
                 settingsForm: {},
                 settingsSaving: false,
                 exporting: false,
+                preview: { open: false, loading: false, pages: 0, error: null, detail: null },
+                previewAbort: null,
 
                 ocr: { open: false, file: null, text: null, loading: false, error: null },
 
@@ -677,6 +736,57 @@
                     } catch (e) {
                         this.chapters = previous;
                     }
+                },
+
+                /**
+                 * Fetch the exported PDF and draw it into the modal. Reflects saved
+                 * state only — unsaved chapter or settings edits are not in the
+                 * document yet.
+                 */
+                async openPreview() {
+                    this.stopPreview();
+                    this.preview = { open: true, loading: true, pages: 0, error: null, detail: null };
+                    this.previewAbort = new AbortController();
+                    const { signal } = this.previewAbort;
+
+                    try {
+                        // no-store: the document is rebuilt on every request, so a
+                        // cached copy is always stale.
+                        const data = await window.auth.fetchJson(
+                            `/api/books/${this.bookId}/preview`, { cache: 'no-store' },
+                        );
+                        if (signal.aborted) return;
+                        if (!data?.pdf) throw new Error(`no pdf in response (keys: ${Object.keys(data ?? {})})`);
+
+                        // Let the modal paint first: the page width is measured off it.
+                        await this.$nextTick();
+
+                        this.preview.pages = await window.pdfPreview.render(
+                            base64ToBytes(data.pdf), this.$refs.previewPages, signal,
+                        );
+                    } catch (e) {
+                        // fetchBlob already toasts server errors; only render failures
+                        // need a message inside the modal.
+                        if (!signal.aborted) {
+                            console.error('PDF preview failed:', e);
+                            this.preview.error = this.$t('preview.error');
+                            this.preview.detail = `${e.name}: ${e.message}`;
+                        }
+                    } finally {
+                        if (!signal.aborted) this.preview.loading = false;
+                    }
+                },
+
+                closePreview() {
+                    this.stopPreview();
+                    this.preview = { open: false, loading: false, pages: 0, error: null, detail: null };
+                },
+
+                /** Cancel an in-flight render and drop the drawn pages. */
+                stopPreview() {
+                    this.previewAbort?.abort();
+                    this.previewAbort = null;
+                    this.$refs.previewPages?.replaceChildren();
                 },
 
                 exportPdf() {

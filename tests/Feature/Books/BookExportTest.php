@@ -47,3 +47,40 @@ describe('PDF export', function () {
         $this->getJson("/api/books/{$book->id}/export")->assertUnauthorized();
     });
 });
+
+describe('PDF preview', function () {
+    it('returns the book PDF as base64 JSON for its owner', function () {
+        $owner = User::factory()->create();
+        $book = Book::factory()
+            ->for($owner)
+            ->has(BookSetting::factory(), 'setting')
+            ->has(Chapter::factory()->count(2), 'chapters')
+            ->create();
+
+        Sanctum::actingAs($owner);
+
+        $response = $this->getJson("/api/books/{$book->id}/preview");
+
+        $response->assertOk()->assertJsonStructure(['pdf']);
+
+        // JSON, not application/pdf: a PDF body never survives the trip to the
+        // browser intact — see BookExportController::preview().
+        expect(base64_decode($response->json('pdf')))->toStartWith('%PDF');
+    });
+
+    it("denies previewing someone else's book", function () {
+        $book = Book::factory()
+            ->has(BookSetting::factory(), 'setting')
+            ->create();
+
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->getJson("/api/books/{$book->id}/preview")->assertForbidden();
+    });
+
+    it('requires authentication', function () {
+        $book = Book::factory()->create();
+
+        $this->getJson("/api/books/{$book->id}/preview")->assertUnauthorized();
+    });
+});

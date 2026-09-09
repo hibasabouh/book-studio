@@ -13,6 +13,12 @@ window.auth = { fetchJson };
 window.Sortable = Sortable;
 window.cropper = { createCropper, loadImage };
 
+// PDF.js is large and only the book editor's preview needs it, so it is pulled
+// in as its own chunk the first time a preview is opened.
+window.pdfPreview = {
+    render: (...args) => import('./pdf-preview').then(module => module.render(...args)),
+};
+
 /**
  * Shared guard for admin pages. Redirects unauthenticated visitors to /login and
  * non-admins to /dashboard, and locks the view into admin mode. Returns true once

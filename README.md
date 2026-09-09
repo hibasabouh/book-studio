@@ -1,5 +1,8 @@
 # Book Studio
 
+[![CI](https://github.com/hibasabouh/book-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/hibasabouh/book-studio/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Author a book as a set of chapters, style it, and export it to a polished PDF — with OCR-assisted content entry, per-book typography, and Arabic/RTL support.
 
 ## Overview
@@ -33,20 +36,35 @@ The app ships with a small admin back-office (dashboard stats, user management, 
 - OCR-assisted chapter content entry from uploaded images
 - Per-book typography/layout settings and PDF export in 4 templates, with Arabic/RTL support
 - Admin panel: dashboard stats, user management, contact-message inbox
-- Public contact form (in progress)
+- Public contact form, with submissions delivered by email and kept in the admin inbox
 - English / Arabic / French localization
 
 ## Getting started
 
+Requires PHP 8.2+, Composer, Node 20+, and MySQL.
+
 ```bash
-composer install
+git clone https://github.com/hibasabouh/book-studio.git
+cd book-studio
 cp .env.example .env
-php artisan key:generate
 ```
 
-Configure a MySQL database in `.env` (`DB_DATABASE=book_studio` by default), then:
+Create the database and point `.env` at it (`DB_DATABASE=book_studio` by
+default), then run the one-shot setup script:
 
 ```bash
+composer setup
+```
+
+That installs the PHP and JS dependencies, generates an app key, links
+`storage/app/public` into `public/storage` (uploaded images are served from
+there), runs the migrations, and builds the frontend assets. The equivalent
+long form is:
+
+```bash
+composer install
+php artisan key:generate
+php artisan storage:link
 php artisan migrate
 npm install
 npm run build
@@ -54,11 +72,41 @@ npm run build
 
 For local development, `composer run dev` starts the app server, queue listener, log viewer (Pail), and Vite dev server together.
 
-Optional environment variables, depending on which features you exercise:
+### Demo data
+
+```bash
+php artisan db:seed
+```
+
+Seeds an admin, a demo user, 8 random users, and a couple of chaptered books
+per demo account — including an Arabic/RTL one, so the export path is easy to
+try. The two named accounts are stable across re-seeds:
+
+| Email | Password | Role |
+| --- | --- | --- |
+| `admin@bookstudio.test` | `password` | Admin |
+| `user@bookstudio.test` | `password` | User |
+
+These are local development credentials only — never seed them anywhere reachable from the internet.
+
+### Optional configuration
+
+Depending on which features you exercise:
 
 - `GOOGLE_CLIENT_ID` — enables "Sign in with Google"
 - `OCRSPACE_API_KEY` / `OCRSPACE_ENDPOINT` — enables OCR-assisted chapter content extraction
 - `CONTACT_RECIPIENT_EMAIL` — where contact form submissions are sent
+- `SANCTUM_STATEFUL_DOMAINS` — must list the host:port you serve the app from, or cookie-authenticated requests come back 401
+
+## Tests
+
+```bash
+composer test
+```
+
+The suite runs on an in-memory SQLite database — `phpunit.xml` overrides
+`DB_CONNECTION` and `DB_DATABASE`, so running the tests never touches your
+development database.
 
 ## API docs
 
@@ -66,12 +114,21 @@ The JSON API (`routes/api.php`) is documented automatically from its route/reque
 
 ## Roadmap
 
-The current codebase is a solid core (auth, book/chapter authoring, PDF export, admin panel) with no automated test coverage yet. Planned next:
+The current codebase is a solid core — auth, book/chapter authoring, PDF export, admin panel — with Pest feature coverage over the auth flows, book/chapter authorization, and export. Planned next:
 
-- Pest feature-test suite (auth, books/chapters, export, admin)
+- Broader test coverage: OCR, book settings, and the admin surface
 - Queued PDF export with status polling and a completion notification
 - Public, read-only book sharing links
 - Book cover images
 - Full-text search across books and chapters
 - A paid subscription tier via Stripe
 - Chapter version history
+
+## License
+
+Book Studio is open source under the [MIT License](LICENSE).
+
+The fonts bundled in `storage/fonts/` are third-party works under the SIL Open
+Font License 1.1, not MIT. The OFL lets them be redistributed with this project
+as long as the license text and copyright notices travel with them, which they
+do — see [storage/fonts/README.md](storage/fonts/README.md).

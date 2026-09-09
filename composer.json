@@ -1,9 +1,9 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "hibasabouh/book-studio",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "Author a book as a set of chapters, style it, and export it to a polished PDF — with OCR-assisted content entry, per-book typography, and Arabic/RTL support.",
+    "keywords": ["laravel", "book", "pdf", "mpdf", "ocr", "rtl", "arabic", "publishing"],
     "license": "MIT",
     "require": {
         "php": "^8.2",
@@ -43,6 +43,7 @@
             "composer install",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php artisan key:generate",
+            "@php artisan storage:link",
             "@php artisan migrate --force",
             "npm install",
             "npm run build"

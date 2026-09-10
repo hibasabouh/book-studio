@@ -7,7 +7,7 @@ Author a book as a set of chapters, style it, and export it to a polished PDF �
 
 ## Overview
 
-Book Studio lets an authenticated user create a book, write and reorder its chapters (with drag-and-drop), and configure per-book layout and typography — template, fonts, text direction, language, font size, line height, and whether to show page numbers, a table of contents, and chapter headers. When ready, the book is exported to a PDF rendered in one of four templates (classic, elegant, manuscript, modern), including correct Arabic/RTL rendering. Chapter content can also be seeded by uploading a scanned image and running it through OCR instead of typing it out.
+Book Studio lets an authenticated user create a book, write and reorder its chapters (with drag-and-drop), give it a cover image, and configure per-book layout and typography — template, fonts, text direction, language, font size, line height, and whether to show page numbers, a table of contents, and chapter headers. When ready, the book is previewed in the browser and exported to a PDF rendered in one of four templates (classic, elegant, manuscript, modern), including correct Arabic/RTL rendering and a table of contents whose entries link to their chapters. Chapter content can also be seeded by uploading a scanned image and running it through OCR instead of typing it out.
 
 The app ships with a small admin back-office (dashboard stats, user management, a contact-message inbox) and supports English, Arabic, and French across both the backend and the client.
 
@@ -16,7 +16,9 @@ The app ships with a small admin back-office (dashboard stats, user management, 
 - **Laravel 12** on PHP 8.2+, MySQL
 - **Laravel Sanctum** for auth — stateful SPA cookie auth for the web app plus token auth for API clients, from one codebase
 - **Blade + Alpine.js 3 + Tailwind v4 (Vite)** on the frontend — Blade renders page shells, Alpine + `fetch` drive the JSON API. This is a deliberate choice over a full SPA framework: the app's interaction surface (forms, drag-and-drop reorder, a settings panel) doesn't need client-side routing or a virtual DOM, so a heavier framework would add build complexity without a matching benefit
-- **mpdf** for PDF generation (4 templates, RTL/Arabic-aware)
+- **mpdf** for PDF generation (4 templates, RTL/Arabic-aware, linked table of contents)
+- **pdf.js** for previewing a generated export in the browser before download
+- **GD** for cover images — server-side crop, resize, and re-encode
 - **dedoc/scramble** for auto-generated OpenAPI docs from the existing route/request/resource definitions
 - **Pest** for testing
 
@@ -26,6 +28,7 @@ The app ships with a small admin back-office (dashboard stats, user management, 
 - **Google OAuth alongside password auth**, isolated behind a dedicated `GoogleAuthService` so the rest of the auth flow (OTP, session/token issuance) doesn't need to know which identity provider was used.
 - **Enum-backed casts on `BookSetting`** (template, fonts, direction, language) rather than free-form strings, so invalid layout configuration is rejected at the model boundary instead of surfacing as a broken PDF render.
 - **Ownership-scoped `BookPolicy` / `ChapterPolicy` plus a single `admin` Gate**, instead of a full roles-and-permissions package — the app only has two authorization shapes (owns-the-resource, is-an-admin), so a package would add configuration surface without covering any case Policies and a Gate don't already handle.
+- **Cover uploads are re-encoded, never stored as received** (`CoverImageService`): the browser sends a crop rectangle as fractions of the source, the server re-applies it to the original at full resolution and writes a fresh JPEG at A4/150dpi. SVG is rejected outright — it can carry script and would be served from our own origin — and a dimension cap bounds GD's memory use. Re-encoding is also what strips EXIF.
 - **OCR via a direct HTTP call to the OCR.space API** (`OcrService`, using the `Http` facade) rather than an SDK, since the integration is a single endpoint call — a dependency would outweigh the code it replaces.
 - **Parallel i18n on both sides**: backend strings in `lang/{en,ar,fr}`, frontend strings in `resources/js/i18n/{en,ar,fr}.json`, kept in sync by convention so a translation change never has to touch only one layer.
 
@@ -33,8 +36,11 @@ The app ships with a small admin back-office (dashboard stats, user management, 
 
 - Registration/login, email verification and password reset via OTP, Google login
 - Book and chapter management, including drag-and-drop chapter reordering
+- Book cover images — framed in the browser at the printed page's ratio, then cropped and re-encoded server-side and rendered as a full-bleed cover page in the export
 - OCR-assisted chapter content entry from uploaded images
 - Per-book typography/layout settings and PDF export in 4 templates, with Arabic/RTL support
+- A generated table of contents whose entries jump to their chapter, plus a matching PDF outline for the reader's sidebar
+- In-browser preview of the generated PDF before downloading it
 - Admin panel: dashboard stats, user management, contact-message inbox
 - Public contact form, with submissions delivered by email and kept in the admin inbox
 - English / Arabic / French localization

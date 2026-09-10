@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Enums\BookFont;
 use App\Models\Book;
+use App\Models\Chapter;
 use App\Support\ScriptFontFormatter;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Mpdf\Config\ConfigVariables;
 use Mpdf\Config\FontVariables;
@@ -83,7 +85,33 @@ class BookExportService
 
         $mpdf->WriteHTML($html);
 
+        $this->linkTableOfContents($mpdf, $book->chapters);
+
         return $mpdf->Output('', 'S');
+    }
+
+    /**
+     * @param  Collection<int, Chapter>  $chapters
+     */
+    private function linkTableOfContents(Mpdf $mpdf, Collection $chapters): void
+    {
+        // One bookmark per chapter, in the order the chapters were written.
+        $targets = [];
+
+        foreach (array_values($mpdf->BMoutlines) as $i => $bookmark) {
+            if ($chapter = $chapters->values()->get($i)) {
+                $targets[$chapter->pdfAnchor()] = $bookmark;
+            }
+        }
+
+        // Repeated references to one anchor are keyed "x", "#x", "##x"...
+        foreach ($mpdf->internallink as $key => $link) {
+            $target = $targets[ltrim($key, '#')] ?? null;
+
+            if ($target && is_int($link)) {
+                $mpdf->SetLink($link, $target['y'], $target['p']);
+            }
+        }
     }
 
     private function writeCoverPage(Mpdf $mpdf, string $image): void

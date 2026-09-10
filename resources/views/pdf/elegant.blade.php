@@ -88,6 +88,10 @@ body {
     margin-bottom: 8px;
     font-size: {{ $setting->font_size }}pt;
 }
+.toc-list a {
+    color: inherit;
+    text-decoration: none;
+}
 
 /* ── Chapter ── */
 .chapter-ornament {
@@ -151,7 +155,7 @@ body {
     <div class="toc-rule"></div>
     <ol class="toc-list">
         @foreach($chapters as $chapter)
-            <li>{!! $fmt->inline($chapter->title) !!}</li>
+            <li><a href="#{{ $chapter->pdfAnchor() }}">{!! $fmt->inline($chapter->title) !!}</a></li>
         @endforeach
     </ol>
 </div>
@@ -160,6 +164,7 @@ body {
 {{-- Chapters --}}
 @foreach($chapters as $chapter)
 <div style="page-break-before: always;">
+    <bookmark content="{{ $chapter->title }}" level="0" />
     @if($setting->show_chapter_headers)
         <div class="chapter-ornament">&#10022; &#10022; &#10022;</div>
         <div class="chapter-title">{!! $fmt->inline($chapter->title) !!}</div>

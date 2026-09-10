@@ -28,4 +28,10 @@ class Chapter extends Model
     {
         return $this->belongsTo(Book::class);
     }
+
+    /** Target name for the PDF's table-of-contents links. */
+    public function pdfAnchor(): string
+    {
+        return "chapter-{$this->id}";
+    }
 }

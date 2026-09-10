@@ -56,6 +56,10 @@ body {
     color: #999;
     margin-{{ $isRtl ? 'left' : 'right' }}: 6px;
 }
+.toc-list a {
+    color: inherit;
+    text-decoration: none;
+}
 
 /* ── Chapter ── */
 .chapter-label {
@@ -105,7 +109,7 @@ body {
     <ul class="toc-list">
         @foreach($chapters as $i => $chapter)
             <li>
-                <span class="toc-dot">{{ $i + 1 }}.</span>{!! $fmt->inline($chapter->title) !!}
+                <a href="#{{ $chapter->pdfAnchor() }}"><span class="toc-dot">{{ $i + 1 }}.</span>{!! $fmt->inline($chapter->title) !!}</a>
             </li>
         @endforeach
     </ul>
@@ -115,6 +119,7 @@ body {
 {{-- Chapters --}}
 @foreach($chapters as $i => $chapter)
 <div style="page-break-before: always;">
+    <bookmark content="{{ $chapter->title }}" level="0" />
     @if($setting->show_chapter_headers)
         <div class="chapter-label">
             {{ $labels['chapter_label'] }} {{ $i + 1 }}

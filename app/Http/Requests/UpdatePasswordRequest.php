@@ -23,7 +23,7 @@ class UpdatePasswordRequest extends FormRequest
 
         // Google-only accounts have no password yet, so they're setting one for
         // the first time — only require the current password when one exists.
-        if (! is_null($this->user()->password)) {
+        if (! is_null($this->user()?->password)) {
             $rules['current_password'] = ['required', 'current_password'];
         }
 

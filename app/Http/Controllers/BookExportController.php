@@ -11,6 +11,9 @@ use Illuminate\Support\Str;
 
 class BookExportController extends Controller
 {
+    /**
+     * Render a book to PDF and return it as a downloadable file.
+     */
     public function download(ExportBookRequest $request, Book $book, BookExportService $service): Response
     {
         $pdf = $this->generate($book, $service);
@@ -28,10 +31,7 @@ class BookExportController extends Controller
     }
 
     /**
-     * The same document as the download, but base64 inside JSON rather than a
-     * PDF body. Anything that claims application/pdf gets intercepted on its way
-     * to the page — browser PDF viewers, download managers, PDF extensions — so
-     * the preview never receives the bytes. JSON is left alone.
+     * The same document as the download, base64-encoded in JSON to avoid PDF interception by browser viewers and extensions.
      */
     public function preview(ExportBookRequest $request, Book $book, BookExportService $service): JsonResponse
     {

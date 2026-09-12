@@ -54,6 +54,9 @@ class BookController extends Controller
             ->setStatusCode(201);
     }
 
+    /**
+     * A single book's details as JSON, or the Blade shell for the browser.
+     */
     public function show(ShowBookRequest $request, Book $book): BookResource|View
     {
         if (! $request->expectsJson()) {
@@ -63,6 +66,9 @@ class BookController extends Controller
         return new BookResource($book->loadCount('chapters'));
     }
 
+    /**
+     * Update a book's title and other top-level fields.
+     */
     public function update(UpdateBookRequest $request, Book $book): BookResource
     {
         $book->update($request->validated());
@@ -70,6 +76,9 @@ class BookController extends Controller
         return new BookResource($book->loadCount('chapters'));
     }
 
+    /**
+     * Delete a book and its cover image.
+     */
     public function destroy(DestroyBookRequest $request, Book $book): JsonResponse
     {
         $book->delete();
@@ -79,6 +88,9 @@ class BookController extends Controller
         return response()->json(['message' => __('messages.book_deleted')]);
     }
 
+    /**
+     * Crop, re-encode, and set a book's cover image, replacing any previous one.
+     */
     public function updateCover(UpdateBookCoverRequest $request, Book $book, CoverImageService $covers): BookResource
     {
         $previous = $book->cover_path;
@@ -91,6 +103,9 @@ class BookController extends Controller
         return new BookResource($book->loadCount('chapters'));
     }
 
+    /**
+     * Remove a book's cover image.
+     */
     public function destroyCover(DestroyBookCoverRequest $request, Book $book): BookResource
     {
         delete_file_if_exist($book->cover_path);

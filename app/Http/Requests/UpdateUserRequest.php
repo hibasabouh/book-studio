@@ -29,7 +29,7 @@ class UpdateUserRequest extends FormRequest
             'name' => ['sometimes', 'required', 'string', 'max:255'],
             'email' => [
                 'sometimes', 'required', 'string', 'lowercase', 'email', 'max:255',
-                Rule::unique('users', 'email')->ignore($this->route('user')->id),
+                Rule::unique('users', 'email')->ignore($this->route('user')?->id),
             ],
             'avatar' => ['sometimes', 'nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
             'password' => ['sometimes', 'nullable', 'confirmed', Password::min(8)],

@@ -18,11 +18,17 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ChapterController extends Controller
 {
+    /**
+     * A book's chapters, in their current display order.
+     */
     public function index(IndexChapterRequest $request, Book $book): AnonymousResourceCollection
     {
         return ChapterResource::collection($book->chapters);
     }
 
+    /**
+     * Add a new chapter to a book, appended after its existing chapters.
+     */
     public function store(StoreChapterRequest $request, Book $book): JsonResponse
     {
         $order   = (int) $book->chapters()->max('order') + 1;
@@ -33,11 +39,17 @@ class ChapterController extends Controller
             ->setStatusCode(201);
     }
 
+    /**
+     * A single chapter's details.
+     */
     public function show(ShowChapterRequest $request, Chapter $chapter): ChapterResource
     {
         return new ChapterResource($chapter);
     }
 
+    /**
+     * Update a chapter's title and/or content.
+     */
     public function update(UpdateChapterRequest $request, Chapter $chapter): ChapterResource
     {
         $chapter->update($request->validated());
@@ -45,6 +57,9 @@ class ChapterController extends Controller
         return new ChapterResource($chapter);
     }
 
+    /**
+     * Delete a chapter.
+     */
     public function destroy(DestroyChapterRequest $request, Chapter $chapter): JsonResponse
     {
         $chapter->delete();
@@ -52,6 +67,9 @@ class ChapterController extends Controller
         return response()->json(['message' => __('messages.chapter_deleted')]);
     }
 
+    /**
+     * Reorder a book's chapters to match the given sequence of chapter IDs.
+     */
     public function reorder(ReorderChaptersRequest $request, Book $book): JsonResponse
     {
         $ids   = $request->validated()['ids'];
@@ -66,6 +84,9 @@ class ChapterController extends Controller
         return response()->json(['message' => 'OK']);
     }
 
+    /**
+     * Extract text from an uploaded image via OCR, for pasting into the chapter.
+     */
     public function ocr(OcrChapterRequest $request, Chapter $chapter, OcrService $ocr): JsonResponse
     {
         $text = $ocr->extractText($request->file('image'), $request->validated('language'));

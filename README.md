@@ -114,15 +114,22 @@ The suite runs on an in-memory SQLite database — `phpunit.xml` overrides
 `DB_CONNECTION` and `DB_DATABASE`, so running the tests never touches your
 development database.
 
+Pest feature/unit coverage spans:
+
+- Auth: registration, login, email verification, password reset, Google sign-in, rate limiting
+- Books & chapters: CRUD, authorization, reordering, cover upload/crop, OCR-assisted content, per-book settings/typography, PDF export and preview
+- Admin: dashboard stats, user management, contact-message inbox
+- Contact form: submission, attachments, validation, mail delivery, throttling
+- Supporting pieces: models, enums, middleware, mail rendering, seeders, the cover-image and OTP services, file helpers, and public/authenticated pages
+
 ## API docs
 
 The JSON API (`routes/api.php`) is documented automatically from its route/request/resource definitions via [Scramble](https://scramble.dedoc.co/). With the app running locally, the generated docs are available at `/docs/api`.
 
 ## Roadmap
 
-The current codebase is a solid core — auth, book/chapter authoring, PDF export, admin panel — with Pest feature coverage over the auth flows, book/chapter authorization, and export. Planned next:
+The current codebase is a solid core — auth, book/chapter authoring, PDF export, admin panel — with broad Pest feature coverage across auth, books/chapters, admin, contact, and the supporting services. Planned next:
 
-- Broader test coverage: OCR, book settings, and the admin surface
 - Queued PDF export with status polling and a completion notification
 - Public, read-only book sharing links
 - Book cover images

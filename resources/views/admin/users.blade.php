@@ -19,17 +19,17 @@
                     <form @submit.prevent="applySearch()" class="sm:w-64">
                         <input type="search" x-model="search" @search="applySearch()"
                                :placeholder="$t('admin.search_users')"
-                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm" />
                     </form>
                     <select x-model="role" @change="applyFilters()"
-                            class="rounded-md border-gray-300 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            class="rounded-md border-gray-300 py-2 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
                         <option value="" x-text="$t('admin.filter_all_roles')"></option>
                         @foreach (Role::cases() as $role)
                             <option value="{{ $role->value }}">{{ $role->label() }}</option>
                         @endforeach
                     </select>
                     <select x-model="status" @change="applyFilters()"
-                            class="rounded-md border-gray-300 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            class="rounded-md border-gray-300 py-2 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
                         <option value="" x-text="$t('admin.filter_all_statuses')"></option>
                         @foreach (UserStatus::cases() as $status)
                             <option value="{{ $status->value }}">{{ $status->label() }}</option>
@@ -66,7 +66,7 @@
                                 <td class="px-4 py-3">
                                     <select :value="user.role" @change="updateRole(user, $event.target.value)"
                                             :disabled="isSelf(user)"
-                                            class="rounded-md border-gray-300 py-1 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:opacity-50">
+                                            class="rounded-md border-gray-300 py-1 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 disabled:opacity-50">
                                         @foreach (Role::cases() as $role)
                                             <option value="{{ $role->value }}">{{ $role->label() }}</option>
                                         @endforeach
@@ -74,7 +74,7 @@
                                 </td>
                                 <td class="px-4 py-3">
                                     <select :value="user.status" @change="updateStatus(user, $event.target.value)"
-                                            class="rounded-md border-gray-300 py-1 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                            class="rounded-md border-gray-300 py-1 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
                                         @foreach (UserStatus::cases() as $status)
                                             <option value="{{ $status->value }}">{{ $status->label() }}</option>
                                         @endforeach
@@ -89,7 +89,7 @@
                                 <td class="px-4 py-3 text-end">
                                     <div class="flex items-center justify-end gap-2">
                                         <a :href="`/admin/users/${user.id}`" :title="$t('admin.view_details')" :aria-label="$t('admin.view_details')"
-                                           class="inline-flex rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-indigo-600">
+                                           class="inline-flex rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-emerald-600">
                                             <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/>
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>

@@ -18,44 +18,13 @@
 
         {{-- Sidebar: chapter list --}}
         <aside class="flex w-64 flex-shrink-0 flex-col border-r border-gray-200 bg-white">
-            <div class="flex items-center justify-between border-b border-gray-200 px-4 py-3">
+            <div class="border-b border-gray-200 px-4 py-3">
                 <a href="/books" class="text-sm text-gray-500 hover:text-gray-700">← <span x-text="$t('nav.library')"></span></a>
-                <div class="flex items-center gap-1">
-                    {{-- Preview PDF --}}
-                    <button @click="openPreview()"
-                            :disabled="preview.loading"
-                            :title="$t('preview.button')"
-                            class="rounded p-1 text-gray-400 hover:text-indigo-600 disabled:opacity-50">
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                        </svg>
-                    </button>
-                    {{-- Export PDF --}}
-                    <button @click="exportPdf()"
-                            :disabled="exporting"
-                            :title="$t('export.button')"
-                            class="rounded p-1 text-gray-400 hover:text-indigo-600 disabled:opacity-50">
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-                        </svg>
-                    </button>
-                    {{-- Settings --}}
-                    <button @click="settingsOpen = !settingsOpen"
-                            :class="settingsOpen ? 'text-indigo-600' : 'text-gray-400 hover:text-gray-600'"
-                            class="rounded p-1"
-                            :title="$t('settings.tab')">
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
-                    </button>
-                </div>
             </div>
 
             <div class="border-b border-gray-200 px-4 py-3">
                 <button @click="addChapter()"
-                        class="w-full rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                        class="w-full rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500"
                         x-text="$t('chapters.add')"></button>
             </div>
 
@@ -67,7 +36,7 @@
                 <ul class="divide-y divide-gray-100" x-ref="chapterList">
                     <template x-for="(chapter, index) in chapters" :key="chapter.id">
                         <li @click="select(chapter); settingsOpen = false"
-                            :class="!settingsOpen && selected?.id === chapter.id ? 'bg-indigo-50' : 'hover:bg-gray-50'"
+                            :class="!settingsOpen && selected?.id === chapter.id ? 'bg-emerald-50' : 'hover:bg-gray-50'"
                             class="flex cursor-pointer items-center gap-1 px-2 py-2">
 
                             {{-- Drag handle --}}
@@ -115,6 +84,41 @@
         {{-- Main panel --}}
         <main class="flex flex-1 flex-col overflow-hidden bg-gray-50">
 
+            {{-- Book-level toolbar: preview, export, settings each get their own labeled,
+                 comfortably spaced button so they're easy to tell apart and hit accurately. --}}
+            <div class="flex items-center justify-end gap-2 border-b border-gray-200 bg-white px-6 py-3">
+                <button @click="openPreview()"
+                        :disabled="preview.loading"
+                        class="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                    <span x-text="$t('preview.button')"></span>
+                </button>
+
+                <button @click="exportPdf()"
+                        :disabled="exporting"
+                        class="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                    </svg>
+                    <span x-text="$t('export.button')"></span>
+                </button>
+
+                <div class="mx-1 h-6 w-px bg-gray-200"></div>
+
+                <button @click="settingsOpen = !settingsOpen"
+                        :class="settingsOpen ? 'bg-emerald-50 text-emerald-700' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'"
+                        class="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span x-text="$t('settings.tab')"></span>
+                </button>
+            </div>
+
             {{-- Settings panel --}}
             <template x-if="settingsOpen">
                 <div class="flex flex-1 flex-col overflow-y-auto p-6">
@@ -161,13 +165,13 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_author')"></label>
                                     <input type="text" x-model="settingsForm.author"
                                            :dir="settingsForm.text_direction || 'ltr'"
-                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm" />
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_subtitle')"></label>
                                     <input type="text" x-model="settingsForm.subtitle"
                                            :dir="settingsForm.text_direction || 'ltr'"
-                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm" />
                                 </div>
                             </div>
                         </section>
@@ -180,7 +184,7 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_template')"></label>
                                         <select x-model="settingsForm.template"
-                                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm">
                                             @foreach (PdfTemplate::cases() as $template)
                                                 <option value="{{ $template->value }}">{{ $template->label() }}</option>
                                             @endforeach
@@ -189,7 +193,7 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_language')"></label>
                                         <select x-model="settingsForm.language"
-                                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm">
                                             <option value="en" x-text="$t('settings.language_en')"></option>
                                             <option value="ar" x-text="$t('settings.language_ar')"></option>
                                             <option value="fr" x-text="$t('settings.language_fr')"></option>
@@ -198,7 +202,7 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_text_direction')"></label>
                                         <select x-model="settingsForm.text_direction"
-                                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm">
                                             <option value="ltr" x-text="$t('settings.direction_ltr')"></option>
                                             <option value="rtl" x-text="$t('settings.direction_rtl')"></option>
                                         </select>
@@ -206,15 +210,15 @@
                                 </div>
                                 <div class="flex flex-col gap-2">
                                     <label class="flex items-center gap-2 text-sm text-gray-700">
-                                        <input type="checkbox" x-model="settingsForm.show_page_numbers" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                                        <input type="checkbox" x-model="settingsForm.show_page_numbers" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500" />
                                         <span x-text="$t('settings.field_show_page_numbers')"></span>
                                     </label>
                                     <label class="flex items-center gap-2 text-sm text-gray-700">
-                                        <input type="checkbox" x-model="settingsForm.show_table_of_contents" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                                        <input type="checkbox" x-model="settingsForm.show_table_of_contents" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500" />
                                         <span x-text="$t('settings.field_show_toc')"></span>
                                     </label>
                                     <label class="flex items-center gap-2 text-sm text-gray-700">
-                                        <input type="checkbox" x-model="settingsForm.show_chapter_headers" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                                        <input type="checkbox" x-model="settingsForm.show_chapter_headers" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500" />
                                         <span x-text="$t('settings.field_show_chapter_headers')"></span>
                                     </label>
                                 </div>
@@ -229,7 +233,7 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_latin_font')"></label>
                                         <select x-model="settingsForm.latin_font"
-                                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm">
                                             @foreach ($latinFonts as $font)
                                                 <option value="{{ $font->value }}">{{ $font->label() }}</option>
                                             @endforeach
@@ -238,7 +242,7 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_arabic_font')"></label>
                                         <select x-model="settingsForm.arabic_font"
-                                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm">
                                             @foreach ($arabicFonts as $font)
                                                 <option value="{{ $font->value }}">{{ $font->label() }}</option>
                                             @endforeach
@@ -249,17 +253,17 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_font_size')"></label>
                                         <input type="number" x-model.number="settingsForm.font_size" min="8" max="72" step="0.5"
-                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm" />
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_chapter_header_font_size')"></label>
                                         <input type="number" x-model.number="settingsForm.chapter_header_font_size" min="8" max="72" step="0.5"
-                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm" />
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_line_height')"></label>
                                         <input type="number" x-model.number="settingsForm.line_height" min="1" max="3" step="0.1"
-                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
+                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm" />
                                     </div>
                                 </div>
                             </div>
@@ -267,7 +271,7 @@
 
                         <div class="flex justify-end">
                             <button @click="saveSettings()" :disabled="settingsSaving"
-                                    class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
+                                    class="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 disabled:opacity-50"
                                     x-text="settingsSaving ? $t('settings.saving') : $t('settings.save')"></button>
                         </div>
                     </div>
@@ -290,7 +294,7 @@
                         <input type="text"
                                x-model="form.title"
                                :dir="settingsForm.text_direction || 'ltr'"
-                               class="block w-full rounded-md border-gray-300 text-lg font-semibold shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+                               class="block w-full rounded-md border-gray-300 text-lg font-semibold shadow-sm focus:border-emerald-500 focus:ring-emerald-500" />
                         <p class="mt-1 text-xs text-red-600" x-show="fieldError('title')" x-text="fieldError('title')"></p>
                     </div>
 
@@ -299,23 +303,23 @@
                             <label class="block text-xs font-medium uppercase tracking-wide text-gray-500"
                                    x-text="$t('chapters.field_content')"></label>
                             <button type="button" @click="openOcr()"
-                                    class="rounded p-1 text-gray-400 hover:text-indigo-600"
-                                    :title="$t('chapters.ocr_button')">
+                                    class="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200 hover:bg-emerald-50">
                                 <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M14 8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                 </svg>
+                                <span x-text="$t('chapters.ocr_button')"></span>
                             </button>
                         </div>
                         <textarea x-model="form.content"
                                   :dir="settingsForm.text_direction || 'ltr'"
-                                  class="flex-1 block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                  class="flex-1 block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm"
                                   placeholder=""></textarea>
                         <p class="mt-1 text-xs text-red-600" x-show="fieldError('content')" x-text="fieldError('content')"></p>
                     </div>
 
                     <div class="mt-4 flex items-center justify-end">
                         <button @click="save()" :disabled="saving"
-                                class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
+                                class="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 disabled:opacity-50"
                                 x-text="saving ? $t('chapters.saving') : $t('chapters.save')"></button>
                     </div>
                 </div>
@@ -344,7 +348,7 @@
                                  alt="" draggable="false" class="max-w-none">
                         </div>
 
-                        <input type="range" class="w-full accent-indigo-600" step="0.0001"
+                        <input type="range" class="w-full accent-emerald-600" step="0.0001"
                                :min="cover.cropper.minScale" :max="cover.cropper.maxScale"
                                :value="cover.cropper.scale"
                                @input="cover.cropper.zoomTo(Number($event.target.value))"
@@ -359,7 +363,7 @@
                             class="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
                             x-text="$t('common.cancel')"></button>
                     <button type="button" @click="saveCover()" :disabled="cover.saving"
-                            class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
+                            class="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 disabled:opacity-50"
                             x-text="cover.saving ? $t('cover.saving') : $t('cover.apply')"></button>
                 </div>
             </div>
@@ -379,7 +383,7 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <button type="button" @click="exportPdf()" :disabled="exporting"
-                                class="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
+                                class="rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 disabled:opacity-50"
                                 x-text="$t('preview.download')"></button>
                         <button type="button" @click="closePreview()"
                                 class="rounded p-1 text-gray-400 hover:text-gray-600"
@@ -416,7 +420,7 @@
                         <label class="block text-sm font-medium text-gray-700" x-text="$t('chapters.ocr_choose_file')"></label>
                         <input type="file" accept=".jpg,.jpeg,.png,.gif,.bmp,.pdf,image/*,application/pdf"
                                @change="onOcrFileChange($event)"
-                               class="block w-full text-sm text-gray-600 file:mr-3 file:rounded-md file:border-0 file:bg-indigo-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-indigo-700 hover:file:bg-indigo-100" />
+                               class="block w-full text-sm text-gray-600 file:mr-3 file:rounded-md file:border-0 file:bg-emerald-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-emerald-700 hover:file:bg-emerald-100" />
                         <p class="text-xs text-gray-400" x-text="$t('chapters.ocr_hint')"></p>
                         <p class="text-xs text-red-600" x-show="ocr.error" x-text="ocr.error"></p>
 
@@ -425,7 +429,7 @@
                                     class="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
                                     x-text="$t('common.cancel')"></button>
                             <button type="button" @click="extractOcrText()" :disabled="!ocr.file || ocr.loading"
-                                    class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
+                                    class="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 disabled:opacity-50"
                                     x-text="ocr.loading ? $t('chapters.ocr_extracting') : $t('chapters.ocr_extract')"></button>
                         </div>
                     </div>
@@ -435,20 +439,20 @@
                     <div class="mt-4 space-y-3">
                         <label class="block text-sm font-medium text-gray-700" x-text="$t('chapters.ocr_result_label')"></label>
                         <textarea x-model="ocr.text" rows="8"
-                                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm"></textarea>
 
                         <div class="mt-4 flex flex-wrap justify-end gap-3">
                             <button type="button" @click="closeOcr()"
                                     class="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
                                     x-text="$t('common.cancel')"></button>
                             <button type="button" @click="applyOcr('copy')"
-                                    class="rounded-md px-3 py-2 text-sm font-medium text-indigo-600 hover:text-indigo-800"
+                                    class="rounded-md px-3 py-2 text-sm font-medium text-emerald-600 hover:text-emerald-800"
                                     x-text="$t('chapters.ocr_copy')"></button>
                             <button type="button" @click="applyOcr('append')"
                                     class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-200"
                                     x-text="$t('chapters.ocr_append')"></button>
                             <button type="button" @click="applyOcr('set')"
-                                    class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                                    class="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500"
                                     x-text="$t('chapters.ocr_set')"></button>
                         </div>
                     </div>

@@ -19,7 +19,7 @@
                 <p class="text-sm text-gray-500" x-text="$t('admin.users_verified')"></p>
                 <p class="mt-2 text-3xl font-semibold text-gray-900" x-text="stats.users_verified ?? '—'"></p>
             </div>
-            <a href="/admin/messages" class="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-900/5 hover:ring-indigo-200">
+            <a href="/admin/messages" class="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-900/5 hover:ring-emerald-200">
                 <p class="text-sm text-gray-500" x-text="$t('admin.messages_unread')"></p>
                 <p class="mt-2 text-3xl font-semibold text-gray-900" x-text="stats.messages_unread ?? '—'"></p>
             </a>

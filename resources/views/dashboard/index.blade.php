@@ -13,7 +13,7 @@
                       :class="$store.auth.user.email_verified_at ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'"
                       x-text="$store.auth.user.email_verified_at ? $t('dashboard.email_verified') : $t('dashboard.email_unverified')"></span>
                 <a x-show="!$store.auth.user.email_verified_at" href="/email/verify"
-                   class="text-sm font-medium text-indigo-600 hover:text-indigo-500" x-text="$t('dashboard.verify_now')"></a>
+                   class="text-sm font-medium text-emerald-600 hover:text-emerald-500" x-text="$t('dashboard.verify_now')"></a>
             </div>
         </template>
 
@@ -37,7 +37,7 @@
         <section class="rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-900/5">
             <div class="flex items-center justify-between">
                 <h2 class="text-base font-semibold text-gray-900" x-text="$t('dashboard.recent_books')"></h2>
-                <a href="/books" class="text-sm font-medium text-indigo-600 hover:text-indigo-500" x-text="$t('dashboard.view_all')"></a>
+                <a href="/books" class="text-sm font-medium text-emerald-600 hover:text-emerald-500" x-text="$t('dashboard.view_all')"></a>
             </div>
 
             <template x-if="loaded && recentBooks.length === 0">

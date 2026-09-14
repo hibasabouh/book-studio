@@ -31,7 +31,7 @@
                             <h1 class="truncate text-2xl font-semibold tracking-tight text-gray-900" x-text="user.name"></h1>
                             <p class="truncate text-sm text-gray-500" x-text="user.email"></p>
                             <div class="mt-2 flex flex-wrap items-center gap-2">
-                                <span class="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700"
+                                <span class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700"
                                       x-text="user.role"></span>
                                 <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
                                       :class="{
@@ -93,7 +93,7 @@
                             <p class="-mt-2 text-xs text-gray-400" x-text="$t('admin.password_hint')"></p>
 
                             <button type="submit" :disabled="saving"
-                                    class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
+                                    class="rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 disabled:opacity-50"
                                     x-text="saving ? $t('profile.saving') : $t('profile.save')"></button>
                         </form>
                     </section>
@@ -108,7 +108,7 @@
                             <template x-for="book in books" :key="book.id">
                                 <li class="flex items-center justify-between py-3">
                                     <div class="min-w-0">
-                                        <a :href="`/books/${book.id}`" class="truncate font-medium text-gray-900 hover:text-indigo-600" x-text="book.title"></a>
+                                        <a :href="`/books/${book.id}`" class="truncate font-medium text-gray-900 hover:text-emerald-600" x-text="book.title"></a>
                                         <p class="truncate text-xs text-gray-400" x-text="book.description"></p>
                                     </div>
                                     <span class="ms-4 shrink-0 text-xs text-gray-500"

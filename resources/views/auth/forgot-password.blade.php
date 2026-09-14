@@ -18,7 +18,7 @@
         <form x-show="step === 1" @submit.prevent="requestCode" class="space-y-4">
             <x-input-field name="email" tkey="field.email" type="email" model="email" error="fieldError('email')" required autocomplete="email" />
             <button type="submit" :disabled="loading"
-                    class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
+                    class="flex w-full justify-center rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 disabled:opacity-50"
                     x-text="loading ? $t('forgot.sending') : $t('forgot.send_code')"></button>
         </form>
 
@@ -29,12 +29,12 @@
             <x-input-field name="password" tkey="field.password" type="password" model="form.password" error="fieldError('password')" required autocomplete="new-password" />
             <x-input-field name="password_confirmation" tkey="field.confirm_password" type="password" model="form.password_confirmation" required autocomplete="new-password" />
             <button type="submit" :disabled="loading"
-                    class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
+                    class="flex w-full justify-center rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 disabled:opacity-50"
                     x-text="loading ? $t('forgot.resetting') : $t('forgot.submit')"></button>
         </form>
 
         <p class="text-center text-sm">
-            <a href="/login" class="font-medium text-indigo-600 hover:text-indigo-500" x-text="$t('forgot.back_to_login')"></a>
+            <a href="/login" class="font-medium text-emerald-600 hover:text-emerald-500" x-text="$t('forgot.back_to_login')"></a>
         </p>
     </div>
 @endsection

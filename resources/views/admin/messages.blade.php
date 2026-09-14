@@ -16,7 +16,7 @@
                 </div>
                 <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
                     <select x-model="category" @change="applyFilters()"
-                            class="rounded-md border-gray-300 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            class="rounded-md border-gray-300 py-2 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
                         <option value="" x-text="$t('admin.messages_filter_all_categories')"></option>
                         @foreach (ContactCategory::cases() as $cat)
                             <option value="{{ $cat->value }}">{{ $cat->label() }}</option>
@@ -24,7 +24,7 @@
                     </select>
                     <label class="flex items-center gap-2 text-sm text-gray-600">
                         <input type="checkbox" x-model="unreadOnly" @change="applyFilters()"
-                               class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                               class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                         <span x-text="$t('admin.messages_filter_unread_only')"></span>
                     </label>
                 </div>
@@ -47,7 +47,7 @@
                         </template>
 
                         <template x-for="msg in messages" :key="msg.id">
-                            <tr class="border-t border-gray-100" :class="!msg.read_at ? 'bg-indigo-50/40' : ''">
+                            <tr class="border-t border-gray-100" :class="!msg.read_at ? 'bg-emerald-50/40' : ''">
                                 <td class="px-4 py-3">
                                     <p class="font-medium text-gray-900" x-text="msg.name"></p>
                                     <p class="text-xs text-gray-500" x-text="msg.email"></p>
@@ -79,13 +79,13 @@
                                 <td class="px-4 py-3 text-end">
                                     <div class="flex items-center justify-end gap-2">
                                         <a :href="`/admin/messages/${msg.id}`" :title="$t('admin.view_details')" :aria-label="$t('admin.view_details')"
-                                           class="inline-flex rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-indigo-600">
+                                           class="inline-flex rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-emerald-600">
                                             <svg class="h-5 w-5 rtl:-scale-x-100" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
                                             </svg>
                                         </a>
                                         <button @click="toggleRead(msg)" :title="msg.read_at ? $t('admin.mark_unread') : $t('admin.mark_read')"
-                                                class="inline-flex rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-indigo-600">
+                                                class="inline-flex rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-emerald-600">
                                             <svg x-show="!msg.read_at" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/>
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>

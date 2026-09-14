@@ -19,7 +19,7 @@
                         <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                             <div class="min-w-0">
                                 <h1 class="truncate text-2xl font-semibold tracking-tight text-gray-900" x-text="message.name"></h1>
-                                <a :href="`mailto:${message.email}`" class="truncate text-sm text-indigo-600 hover:text-indigo-500" x-text="message.email"></a>
+                                <a :href="`mailto:${message.email}`" class="truncate text-sm text-emerald-600 hover:text-emerald-500" x-text="message.email"></a>
                                 <div class="mt-3 flex flex-wrap items-center gap-2">
                                     <span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700"
                                           x-text="$t(`contact.category_${message.category}`)"></span>
@@ -32,7 +32,7 @@
                             </div>
                             <div class="flex shrink-0 items-center gap-2">
                                 <button @click="toggleRead()" :title="message.read_at ? $t('admin.mark_unread') : $t('admin.mark_read')" :aria-label="message.read_at ? $t('admin.mark_unread') : $t('admin.mark_read')"
-                                        class="inline-flex rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-indigo-600">
+                                        class="inline-flex rounded-md p-1.5 text-gray-500 hover:bg-gray-100 hover:text-emerald-600">
                                     <svg x-show="!message.read_at" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>

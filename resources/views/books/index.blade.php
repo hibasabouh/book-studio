@@ -5,7 +5,7 @@
         <div class="flex items-center justify-between">
             <h1 class="text-2xl font-semibold tracking-tight text-gray-900" x-text="$t('books.title')"></h1>
             <button @click="openCreate()"
-                    class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                    class="rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500"
                     x-text="$t('books.new')"></button>
         </div>
 
@@ -23,7 +23,7 @@
                         <span x-text="$t('books.chapters_count')"></span>
                     </p>
                     <div class="mt-4 flex items-center gap-3 text-sm">
-                        <a :href="`/books/${book.id}`" class="font-medium text-indigo-600 hover:text-indigo-500" x-text="$t('books.open')"></a>
+                        <a :href="`/books/${book.id}`" class="font-medium text-emerald-600 hover:text-emerald-500" x-text="$t('books.open')"></a>
                         <button @click="openEdit(book)" class="text-gray-600 hover:text-gray-900" x-text="$t('books.edit')"></button>
                         <button @click="destroy(book)" class="text-red-600 hover:text-red-700" x-text="$t('books.delete')"></button>
                     </div>
@@ -40,13 +40,13 @@
                     <div>
                         <label for="book_description" class="block text-sm font-medium text-gray-700" x-text="$t('books.field_description')"></label>
                         <textarea id="book_description" x-model="form.description" rows="3"
-                                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm"></textarea>
                         <p class="mt-1 text-xs text-red-600" x-show="fieldError('description')" x-text="fieldError('description')"></p>
                     </div>
                     <div class="flex justify-end gap-3">
                         <button type="button" @click="modalOpen = false" class="rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900" x-text="$t('books.cancel')"></button>
                         <button type="submit" :disabled="saving"
-                                class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
+                                class="rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 disabled:opacity-50"
                                 x-text="saving ? $t('books.saving') : $t('books.save')"></button>
                     </div>
                 </form>

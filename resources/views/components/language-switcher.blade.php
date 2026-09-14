@@ -9,7 +9,7 @@
 <div x-data class="relative inline-block">
     <select @change="$store.i18n.set($event.target.value)"
             aria-label="Language"
-            class="appearance-none rounded-md border-gray-300 bg-none py-1.5 pe-8 ps-3 text-sm text-gray-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            class="appearance-none rounded-md border-gray-300 bg-none py-1.5 pe-8 ps-3 text-sm text-gray-600 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
         <option value="en" :selected="$store.i18n.locale === 'en'">English</option>
         <option value="ar" :selected="$store.i18n.locale === 'ar'">العربية</option>
         <option value="fr" :selected="$store.i18n.locale === 'fr'">Français</option>

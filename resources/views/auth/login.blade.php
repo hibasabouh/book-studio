@@ -17,11 +17,11 @@
             <x-input-field name="password" tkey="field.password" label="Password" type="password" model="form.password" required autocomplete="current-password" toggleable />
 
             <div class="text-end">
-                <a href="/forgot-password" class="text-sm font-medium text-indigo-600 hover:text-indigo-500" x-text="$t('forgot.link')"></a>
+                <a href="/forgot-password" class="text-sm font-medium text-emerald-600 hover:text-emerald-500" x-text="$t('forgot.link')"></a>
             </div>
 
             <button type="submit" :disabled="loading"
-                    class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50">
+                    class="flex w-full justify-center rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 disabled:opacity-50">
                 <span x-text="loading ? $t('login.submitting') : $t('login.submit')"></span>
             </button>
         </form>
@@ -30,7 +30,7 @@
 
         <p class="text-center text-sm text-gray-500">
             <span x-text="$t('login.no_account')"></span>
-            <a href="/register" class="font-medium text-indigo-600 hover:text-indigo-500" x-text="$t('login.create_one')"></a>
+            <a href="/register" class="font-medium text-emerald-600 hover:text-emerald-500" x-text="$t('login.create_one')"></a>
         </p>
     </div>
 @endsection

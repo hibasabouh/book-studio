@@ -18,7 +18,7 @@
                     <h2 class="mt-4 text-lg font-semibold text-gray-900" x-text="$t('contact.sent_title')"></h2>
                     <p class="mt-1 text-sm text-gray-600" x-text="$t('contact.sent_body')"></p>
                     <button type="button" @click="reset()"
-                            class="mt-6 rounded-md px-4 py-2 text-sm font-semibold text-indigo-600 ring-1 ring-indigo-200 hover:bg-indigo-50"
+                            class="mt-6 rounded-md px-4 py-2 text-sm font-semibold text-emerald-600 ring-1 ring-emerald-200 hover:bg-emerald-50"
                             x-text="$t('contact.send_another')"></button>
                 </div>
             </template>
@@ -38,7 +38,7 @@
                         <div>
                             <label for="category" class="block text-sm font-medium text-gray-700" x-text="$t('contact.field_category')"></label>
                             <select id="category" x-model="form.category"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm">
                                 <option value="bug" x-text="$t('contact.category_bug')"></option>
                                 <option value="feature" x-text="$t('contact.category_feature')"></option>
                                 <option value="general" x-text="$t('contact.category_general')"></option>
@@ -50,13 +50,13 @@
                             <label for="message" class="block text-sm font-medium text-gray-700" x-text="$t('contact.field_message')"></label>
                             <textarea id="message" x-model="form.message" rows="5" required
                                       :placeholder="$t('contact.field_message_placeholder')"
-                                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                                      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm"></textarea>
                             <p class="mt-1 text-xs text-red-600" x-show="fieldError('message')" x-text="fieldError('message')"></p>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700" x-text="$t('contact.field_attachments')"></label>
-                            <label class="mt-1 flex w-full cursor-pointer items-center justify-center rounded-md border border-dashed border-gray-300 px-3 py-4 text-sm text-gray-500 hover:border-indigo-400 hover:text-indigo-600">
+                            <label class="mt-1 flex w-full cursor-pointer items-center justify-center rounded-md border border-dashed border-gray-300 px-3 py-4 text-sm text-gray-500 hover:border-emerald-400 hover:text-emerald-600">
                                 <span x-text="$t('contact.field_attachments_hint')"></span>
                                 <input type="file" class="hidden" multiple
                                        accept="image/jpeg,image/png,image/webp,application/pdf,text/plain,.doc,.docx"
@@ -76,7 +76,7 @@
                         </div>
 
                         <button type="submit" :disabled="loading"
-                                class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50">
+                                class="flex w-full justify-center rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 disabled:opacity-50">
                             <span x-text="loading ? $t('contact.submitting') : $t('contact.submit')"></span>
                         </button>
                     </form>

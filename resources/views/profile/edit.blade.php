@@ -41,7 +41,7 @@
                 <x-input-field name="name" tkey="field.name" model="profile.name" error="fieldError('name')" required />
                 <x-input-field name="email" tkey="field.email" type="email" model="profile.email" error="fieldError('email')" required />
                 <button type="submit" :disabled="savingInfo"
-                        class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
+                        class="rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 disabled:opacity-50"
                         x-text="savingInfo ? $t('profile.saving') : $t('profile.save')"></button>
             </form>
         </section>
@@ -65,7 +65,7 @@
                 <x-input-field name="new_password" tkey="profile.new_password" type="password" model="password.password" error="pwError('password')" required autocomplete="new-password" />
                 <x-input-field name="new_password_confirmation" tkey="profile.confirm_password" type="password" model="password.password_confirmation" required autocomplete="new-password" />
                 <button type="submit" :disabled="savingPassword"
-                        class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50"
+                        class="rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 disabled:opacity-50"
                         x-text="savingPassword ? $t('profile.saving_password') : ($store.auth.user?.has_password ? $t('profile.update_password') : $t('profile.set_password'))"></button>
             </form>
         </section>

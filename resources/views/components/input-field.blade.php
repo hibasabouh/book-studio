@@ -18,7 +18,7 @@
                 id="{{ $name }}"
                 :type="shown ? 'text' : 'password'"
                 x-model="{{ $model }}"
-                {{ $attributes->merge(['class' => 'block w-full rounded-md border-gray-300 pe-10 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm']) }}
+                {{ $attributes->merge(['class' => 'block w-full rounded-md border-gray-300 pe-10 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm']) }}
             >
             <button type="button" tabindex="-1" @click="shown = !shown"
                     class="absolute inset-y-0 end-0 flex items-center px-3 text-gray-400 hover:text-gray-600">
@@ -36,7 +36,7 @@
             id="{{ $name }}"
             type="{{ $type }}"
             x-model="{{ $model }}"
-            {{ $attributes->merge(['class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm']) }}
+            {{ $attributes->merge(['class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm']) }}
         >
     @endif
 

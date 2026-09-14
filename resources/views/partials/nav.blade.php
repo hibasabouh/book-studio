@@ -3,7 +3,7 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
             <div class="flex items-center gap-8">
-                <a href="/" class="text-lg font-semibold tracking-tight text-indigo-600">
+                <a href="/" class="text-lg font-semibold tracking-tight text-emerald-600">
                     {{ config('app.name', 'Book Studio') }}
                 </a>
 
@@ -38,7 +38,7 @@
                     <div class="flex items-center gap-3">
                         <a href="/login" class="text-sm font-medium text-gray-600 hover:text-gray-900" x-text="$t('nav.login')"></a>
                         <a href="/register"
-                           class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                           class="rounded-full bg-gray-900 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-800"
                            x-text="$t('nav.get_started')"></a>
                     </div>
                 </template>
@@ -51,7 +51,7 @@
                                 x-show="$store.auth.user?.role === 'admin'"
                                 @click="const next = $store.mode.isAdmin ? 'user' : 'admin'; $store.mode.set(next); window.location.href = next === 'admin' ? '/admin' : '/dashboard';"
                                 class="rounded-full px-3 py-1 text-xs font-medium ring-1 ring-inset"
-                                :class="$store.mode.isAdmin ? 'bg-indigo-50 text-indigo-700 ring-indigo-200 hover:bg-indigo-100' : 'text-gray-600 ring-gray-300 hover:bg-gray-50'"
+                                :class="$store.mode.isAdmin ? 'bg-emerald-50 text-emerald-700 ring-emerald-200 hover:bg-emerald-100' : 'text-gray-600 ring-gray-300 hover:bg-gray-50'"
                                 x-text="$store.mode.isAdmin ? $t('nav.switch_to_user') : $t('nav.switch_to_admin')"></button>
 
                         <a href="/profile" class="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900">

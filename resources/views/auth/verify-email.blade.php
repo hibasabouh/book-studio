@@ -20,13 +20,13 @@
                            inputmode="numeric" autocomplete="one-time-code" maxlength="6" required />
 
             <button type="submit" :disabled="loading"
-                    class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50">
+                    class="flex w-full justify-center rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 disabled:opacity-50">
                 <span x-text="loading ? $t('verify.submitting') : $t('verify.submit')"></span>
             </button>
         </form>
 
         <button type="button" @click="resend" :disabled="loading"
-                class="text-sm font-medium text-indigo-600 hover:text-indigo-500 disabled:opacity-50"
+                class="text-sm font-medium text-emerald-600 hover:text-emerald-500 disabled:opacity-50"
                 x-text="$t('verify.resend')">
         </button>
     </div>

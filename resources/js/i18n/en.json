@@ -64,6 +64,12 @@
   "landing.go_dashboard": "Go to dashboard",
   "landing.portfolio_note": "A personal portfolio project by",
   "landing.about_link": "About this project",
+  "landing.tag_authoring": "Write",
+  "landing.tag_layout": "Layout",
+  "landing.tag_export": "Export",
+  "landing.badge_typesetting": "Real Arabic typesetting",
+  "landing.badge_export": "Print-ready PDF export",
+  "landing.badge_ocr": "Scan-to-text import",
   "landing.cta_title": "Found a bug, or have an idea?",
   "landing.cta_body": "This project is under active development. If something's broken or you think of a feature worth adding, I'd genuinely like to hear it.",
   "landing.cta_button": "Get in touch",
@@ -315,5 +321,5 @@
   "contact.send_another": "Send another message",
   "contact.error": "Something went wrong. Please try again.",
   "contact.direct_title": "Prefer to reach out directly?",
-  "contact.direct_body": "<a href=\"mailto:hiba.sabouh.98@gmail.com\" class=\"font-medium text-indigo-600 hover:text-indigo-500\">Email me</a>, or find me on <a href=\"https://github.com/hibasabouh\" target=\"_blank\" rel=\"noopener\" class=\"font-medium text-indigo-600 hover:text-indigo-500\">GitHub</a> and <a href=\"https://linkedin.com/in/hiba-sabouh-13139b28a\" target=\"_blank\" rel=\"noopener\" class=\"font-medium text-indigo-600 hover:text-indigo-500\">LinkedIn</a>."
+  "contact.direct_body": "<a href=\"mailto:hiba.sabouh.98@gmail.com\" class=\"font-medium text-emerald-600 hover:text-emerald-500\">Email me</a>, or find me on <a href=\"https://github.com/hibasabouh\" target=\"_blank\" rel=\"noopener\" class=\"font-medium text-emerald-600 hover:text-emerald-500\">GitHub</a> and <a href=\"https://linkedin.com/in/hiba-sabouh-13139b28a\" target=\"_blank\" rel=\"noopener\" class=\"font-medium text-emerald-600 hover:text-emerald-500\">LinkedIn</a>."
 }

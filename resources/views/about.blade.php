@@ -23,7 +23,7 @@
         ['key' => 'quality'],
     ];
 
-    $linkClass = 'rounded-md px-3 py-2 text-sm font-semibold text-gray-700 ring-1 ring-gray-300 hover:bg-gray-50 hover:text-indigo-600';
+    $linkClass = 'rounded-md px-3 py-2 text-sm font-semibold text-gray-700 ring-1 ring-gray-300 hover:bg-gray-50 hover:text-emerald-600';
     $cardClass = 'rounded-lg bg-white p-6 shadow-sm ring-1 ring-gray-900/5 sm:p-8';
 @endphp
 
@@ -32,7 +32,7 @@
         {{-- Hero --}}
         <section class="text-center">
             <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Book Studio</h1>
-            <p class="mt-2 text-lg font-medium text-indigo-600" x-text="$t('about.hero_tagline')"></p>
+            <p class="mt-2 text-lg font-medium text-emerald-600" x-text="$t('about.hero_tagline')"></p>
             <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-gray-600" x-text="$t('about.hero_body')"></p>
         </section>
 
@@ -62,7 +62,7 @@
                 @foreach ($stack as $item)
                     @php($key = $item['key'])
                     <div class="rounded-lg bg-white p-5 shadow-sm ring-1 ring-gray-900/5">
-                        <p class="text-sm font-semibold text-indigo-600" x-text="$t('about.stack_{{ $key }}')"></p>
+                        <p class="text-sm font-semibold text-emerald-600" x-text="$t('about.stack_{{ $key }}')"></p>
                         @isset($item['value'])
                             <p class="mt-1 text-sm text-gray-600">{{ $item['value'] }}</p>
                         @else
@@ -79,7 +79,7 @@
             <ul class="mt-4 space-y-3">
                 @foreach ($notes as $note)
                     <li class="flex gap-3 text-sm leading-relaxed text-gray-600">
-                        <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-500"></span>
+                        <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500"></span>
                         <span x-text="$t('about.note_{{ $note }}')"></span>
                     </li>
                 @endforeach
@@ -114,15 +114,15 @@
         </section>
 
         {{-- CTA --}}
-        <section class="rounded-lg bg-indigo-50 p-6 text-center ring-1 ring-indigo-100 sm:p-8">
+        <section class="rounded-lg bg-emerald-50 p-6 text-center ring-1 ring-emerald-100 sm:p-8">
             <h2 class="text-lg font-semibold text-gray-900" x-text="$t('about.cta_title')"></h2>
             <p class="mt-1 text-sm text-gray-600" x-text="$t('about.cta_body')"></p>
             <div class="mt-4 flex flex-wrap justify-center gap-3">
                 <a href="/contact"
-                   class="inline-flex rounded-md bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                   class="inline-flex rounded-md bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500"
                    x-text="$t('about.cta_button')"></a>
                 <a href="{{ $repoUrl }}" target="_blank" rel="noopener"
-                   class="inline-flex rounded-md bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-gray-300 hover:text-indigo-600"
+                   class="inline-flex rounded-md bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-gray-300 hover:text-emerald-600"
                    x-text="$t('about.cta_secondary')"></a>
             </div>
         </section>
@@ -131,12 +131,12 @@
         <section class="text-center text-sm text-gray-500">
             <p>
                 <span x-text="$t('about.credit_text')"></span>
-                <a href="{{ $portfolioUrl }}" target="_blank" rel="noopener" class="ms-1 font-medium text-gray-600 hover:text-indigo-600">Hiba Sabouh</a>
+                <a href="{{ $portfolioUrl }}" target="_blank" rel="noopener" class="ms-1 font-medium text-gray-600 hover:text-emerald-600">Hiba Sabouh</a>
             </p>
             <p class="mt-2">
-                <a href="{{ $repoUrl }}" target="_blank" rel="noopener" class="text-gray-600 hover:text-indigo-600" x-text="$t('about.link_source')"></a>
+                <a href="{{ $repoUrl }}" target="_blank" rel="noopener" class="text-gray-600 hover:text-emerald-600" x-text="$t('about.link_source')"></a>
                 <span class="mx-2">·</span>
-                <a href="{{ $repoUrl }}/blob/main/LICENSE" target="_blank" rel="noopener" class="text-gray-600 hover:text-indigo-600" x-text="$t('about.credit_license')"></a>
+                <a href="{{ $repoUrl }}/blob/main/LICENSE" target="_blank" rel="noopener" class="text-gray-600 hover:text-emerald-600" x-text="$t('about.credit_license')"></a>
             </p>
         </section>
     </div>

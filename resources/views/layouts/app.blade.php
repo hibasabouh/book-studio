@@ -10,7 +10,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
 </head>
-<body class="h-full bg-gray-50 text-gray-900 antialiased">
+<body class="h-full bg-stone-50 text-gray-900 antialiased">
     <div class="min-h-full">
         @include('partials.nav')
 

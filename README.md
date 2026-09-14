@@ -11,6 +11,21 @@ Book Studio lets an authenticated user create a book, write and reorder its chap
 
 The app ships with a small admin back-office (dashboard stats, user management, a contact-message inbox) and supports English, Arabic, and French across both the backend and the client.
 
+## Screenshots
+
+![Book Studio — write and publish beautiful books](docs/screenshots/hero.png)
+
+| | |
+| --- | --- |
+| ![Library dashboard](docs/screenshots/library.png) | ![Chapter editor](docs/screenshots/chapters.png) |
+| **Library** — every book on one dashboard | **Chapters** — write, edit, and reorder by drag-and-drop |
+| ![Per-book typography panel](docs/screenshots/typography.png) | ![OCR-assisted chapter entry](docs/screenshots/ocr.png) |
+| **Typography** — template, font pairing, direction, spacing | **OCR** — pull text from a scanned page into a chapter |
+| ![Exported Arabic PDF](docs/screenshots/export-arabic.png) | ![The same chapter in a second template](docs/screenshots/templates.png) |
+| **Arabic export** — correct shaping, direction, and mixed-script runs | **Templates** — one chapter, four ways to set it |
+| ![Account dashboard](docs/screenshots/dashboard.png) | ![Sign in](docs/screenshots/login.png) |
+| **Dashboard** — totals and recent books at a glance | **Auth** — password, Google sign-in, OTP verification |
+
 ## Tech stack
 
 - **Laravel 12** on PHP 8.2+, MySQL
@@ -132,7 +147,6 @@ The current codebase is a solid core — auth, book/chapter authoring, PDF expor
 
 - Queued PDF export with status polling and a completion notification
 - Public, read-only book sharing links
-- Book cover images
 - Full-text search across books and chapters
 - A paid subscription tier via Stripe
 - Chapter version history

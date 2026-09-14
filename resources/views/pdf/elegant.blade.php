@@ -22,10 +22,11 @@ body {
     margin: 30px 20px;
 }
 .cover-ornament {
-    font-size: 18pt;
-    color: #8b7355;
+    font-family: freeserif;
+    font-size: 26pt;
+    color: #1a1a1a;
     margin-bottom: 20px;
-    letter-spacing: 8px;
+    letter-spacing: 10px;
 }
 .cover-title {
     font-family: {{ $bodyFont }};
@@ -52,8 +53,9 @@ body {
     margin-top: 20px;
 }
 .cover-ornament-bottom {
-    font-size: 14pt;
-    color: #8b7355;
+    font-family: freeserif;
+    font-size: 21pt;
+    color: #1a1a1a;
     margin-top: 20px;
     letter-spacing: 8px;
 }
@@ -61,9 +63,10 @@ body {
 /* ── Table of Contents ── */
 .toc-ornament {
     text-align: center;
-    font-size: 14pt;
-    color: #8b7355;
-    letter-spacing: 6px;
+    font-family: freeserif;
+    font-size: 21pt;
+    color: #1a1a1a;
+    letter-spacing: 8px;
     margin-bottom: 10px;
 }
 .toc-title {
@@ -96,9 +99,10 @@ body {
 /* ── Chapter ── */
 .chapter-ornament {
     text-align: center;
-    font-size: 14pt;
-    color: #8b7355;
-    letter-spacing: 6px;
+    font-family: freeserif;
+    font-size: 21pt;
+    color: #1a1a1a;
+    letter-spacing: 8px;
     margin-bottom: 10px;
 }
 .chapter-title {

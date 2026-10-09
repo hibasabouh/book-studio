@@ -26,4 +26,5 @@ return [
     'export_failed_unexpected' => 'Something went wrong while generating the PDF. Please try again.',
     'export_not_ready' => 'This export is not ready to download.',
     'export_expired' => 'This export has expired. Please export the book again.',
+    'server_error' => 'Something went wrong on our side. Please try again.',
 ];

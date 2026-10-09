@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Chapter;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateChapterRequest extends FormRequest
@@ -18,7 +19,7 @@ class UpdateChapterRequest extends FormRequest
     {
         return [
             'title'   => ['sometimes', 'required', 'string', 'max:255'],
-            'content' => ['nullable', 'string'],
+            'content' => ['nullable', 'string', 'max:'.Chapter::MAX_CONTENT_LENGTH],
         ];
     }
 }

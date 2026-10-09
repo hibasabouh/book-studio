@@ -26,4 +26,5 @@ return [
     'export_failed_unexpected' => 'Une erreur est survenue lors de la génération du PDF. Veuillez réessayer.',
     'export_not_ready' => 'Cet export n\'est pas encore prêt à être téléchargé.',
     'export_expired' => 'Cet export a expiré. Veuillez exporter le livre à nouveau.',
+    'server_error' => 'Une erreur est survenue de notre côté. Veuillez réessayer.',
 ];

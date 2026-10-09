@@ -176,12 +176,14 @@
                                     <input type="text" x-model="settingsForm.author"
                                            :dir="settingsForm.text_direction || 'ltr'"
                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm" />
+                                    <p class="mt-1 text-xs text-red-600" x-show="fieldError('author', settingsErrors)" x-text="fieldError('author', settingsErrors)"></p>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1" x-text="$t('settings.field_subtitle')"></label>
                                     <input type="text" x-model="settingsForm.subtitle"
                                            :dir="settingsForm.text_direction || 'ltr'"
                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm" />
+                                    <p class="mt-1 text-xs text-red-600" x-show="fieldError('subtitle', settingsErrors)" x-text="fieldError('subtitle', settingsErrors)"></p>
                                 </div>
                             </div>
                         </section>
@@ -501,6 +503,7 @@
 
                 settingsOpen: false,
                 settingsForm: {},
+                settingsErrors: {},
                 settingsSaving: false,
                 exportStarting: false,
                 preview: { open: false, loading: false, pages: 0, error: null, detail: null },
@@ -696,6 +699,7 @@
 
                 async saveSettings() {
                     this.settingsSaving = true;
+                    this.settingsErrors = {};
                     try {
                         const data = await window.auth.fetchJson(`/api/books/${this.bookId}/setting`, {
                             method: 'PATCH',
@@ -707,7 +711,8 @@
                             detail: { message: this.$t('settings.saved'), type: 'success' },
                         }));
                     } catch (e) {
-                        console.error(e);
+                        if (e.status === 422) this.settingsErrors = e.data?.errors || {};
+                        else console.error(e);
                     } finally {
                         this.settingsSaving = false;
                     }
@@ -837,7 +842,7 @@
                     return this.exportJob.status === 'pending' ? this.$t('export.queued') : this.$t('export.exporting');
                 },
 
-                fieldError(f) { return this.errors[f]?.[0] || ''; },
+                fieldError(f, bag = this.errors) { return bag[f]?.[0] || ''; },
             };
         }
     </script>

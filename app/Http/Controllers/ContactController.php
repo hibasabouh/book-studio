@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Throwable;
 
 class ContactController extends Controller
@@ -33,8 +34,9 @@ class ContactController extends Controller
         foreach ($request->file('attachments', []) as $file) {
             $contactMessage->attachments()->create([
                 'path' => upload_file($file, 'contact', 'contact-attachments'),
-                'original_name' => $file->getClientOriginalName(),
-                'mime_type' => $file->getClientMimeType(),
+                // Client-supplied values; clamp to the string(255) columns.
+                'original_name' => Str::substr($file->getClientOriginalName(), 0, 255),
+                'mime_type' => Str::substr($file->getClientMimeType(), 0, 255),
                 'size' => $file->getSize(),
             ]);
         }

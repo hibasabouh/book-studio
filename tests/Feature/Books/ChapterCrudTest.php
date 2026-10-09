@@ -66,6 +66,7 @@ describe('creating a chapter', function () {
         'missing title' => [[], 'title'],
         'blank title' => [['title' => ''], 'title'],
         'overlong title' => [['title' => str_repeat('a', 256)], 'title'],
+        'overlong content' => [['title' => 'Long', 'content' => str_repeat('a', Chapter::MAX_CONTENT_LENGTH + 1)], 'content'],
     ]);
 
     it('404s when the book does not exist', function () {
@@ -154,6 +155,19 @@ describe('updating a chapter', function () {
         $this->patchJson("/api/chapters/{$chapter->id}", ['title' => str_repeat('a', 256)])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('title');
+    });
+
+    it('accepts content at the length limit and rejects anything longer', function () {
+        $chapter = Chapter::factory()->for($this->book)->create(['content' => 'Kept']);
+
+        $this->patchJson("/api/chapters/{$chapter->id}", ['content' => str_repeat('a', Chapter::MAX_CONTENT_LENGTH + 1)])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('content');
+
+        expect($chapter->refresh()->content)->toBe('Kept');
+
+        $this->patchJson("/api/chapters/{$chapter->id}", ['content' => str_repeat('a', Chapter::MAX_CONTENT_LENGTH)])
+            ->assertOk();
     });
 
     it('does not let the order be changed through the update endpoint', function () {

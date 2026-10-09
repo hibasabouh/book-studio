@@ -19,7 +19,7 @@ class StoreChapterRequest extends FormRequest
     {
         return [
             'title'   => ['required', 'string', 'max:255'],
-            'content' => ['nullable', 'string'],
+            'content' => ['nullable', 'string', 'max:'.Chapter::MAX_CONTENT_LENGTH],
         ];
     }
 }

@@ -24,6 +24,7 @@ class BookExportService
      */
     public function generatePdf(Book $book): string
     {
+        $book->loadMissing(['chapters', 'setting']);
         $setting = $book->setting;
         $isRtl = $setting->text_direction->isRtl();
         $labels = $setting->language->templateLabels();

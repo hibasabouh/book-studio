@@ -4,6 +4,7 @@ import Alpine from 'alpinejs';
 import Sortable from 'sortablejs';
 import { fetchJson } from './auth';
 import { createCropper, loadImage } from './cropper';
+import exportsStore from './exports';
 import { getLocale, setLocale, translate, isRtl, applyDir, SUPPORTED } from './i18n';
 
 window.Alpine = Alpine;
@@ -129,6 +130,8 @@ Alpine.store('toasts', {
     },
 });
 
+Alpine.store('exports', exportsStore);
+
 /**
  * Global, reactive auth state. Auth is session-based: the server sets an httpOnly
  * session cookie on login; `fetchUser` confirms it by calling GET /api/user.
@@ -145,6 +148,7 @@ Alpine.store('auth', {
         try {
             const data = await fetchJson('/api/user');
             this.user = data.user;
+            if (this.user) Alpine.store('exports').resume();
         } catch (e) {
             console.error(e);
             this.user = null;
@@ -164,6 +168,7 @@ Alpine.store('auth', {
         } finally {
             this.user = null;
             Alpine.store('mode').clear();
+            Alpine.store('exports').clear();
         }
     },
 });

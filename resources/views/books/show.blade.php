@@ -103,7 +103,7 @@
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
                     </svg>
-                    <span x-text="$t('export.button')"></span>
+                    <span x-text="exporting ? $t('export.exporting') : $t('export.button')"></span>
                 </button>
 
                 <div class="mx-1 h-6 w-px bg-gray-200"></div>
@@ -117,6 +117,16 @@
                     </svg>
                     <span x-text="$t('settings.tab')"></span>
                 </button>
+            </div>
+
+            {{-- Export status, shown only once a job outlasts the first quick status check. --}}
+            <div x-show="exportJob?.checks" x-cloak role="status" aria-live="polite"
+                 class="flex items-center gap-2 border-b border-gray-200 bg-white px-6 py-2 text-xs text-gray-600">
+                <svg x-show="!exportJob?.stalled" class="h-4 w-4 animate-spin text-emerald-600" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                </svg>
+                <span x-text="exportStatusLabel()"></span>
             </div>
 
             {{-- Settings panel --}}
@@ -492,7 +502,7 @@
                 settingsOpen: false,
                 settingsForm: {},
                 settingsSaving: false,
-                exporting: false,
+                exportStarting: false,
                 preview: { open: false, loading: false, pages: 0, error: null, detail: null },
                 previewAbort: null,
 
@@ -793,12 +803,38 @@
                     this.$refs.previewPages?.replaceChildren();
                 },
 
-                exportPdf() {
-                    this.exporting = true;
-                    // Direct navigation: browser sends session cookie, server returns
-                    // Content-Disposition: attachment so the page stays and file downloads.
-                    window.location.href = `/api/books/${this.bookId}/export`;
-                    setTimeout(() => { this.exporting = false; }, 2000);
+                /** This book's running export, tracked globally so it survives leaving the page. */
+                get exportJob() {
+                    return this.$store.exports.forBook(this.bookId);
+                },
+
+                get exporting() {
+                    return this.exportStarting || !!this.exportJob;
+                },
+
+                /** Queue an export; the global tracker announces it with a download link once ready. */
+                async exportPdf() {
+                    if (this.exporting) return;
+                    this.exportStarting = true;
+
+                    try {
+                        const { data } = await window.auth.fetchJson(
+                            `/api/books/${this.bookId}/exports`, { method: 'POST' },
+                        );
+                        this.$store.exports.track(data);
+                    } catch (e) {
+                        // fetchJson has already toasted the server or network error.
+                        console.error('PDF export failed:', e);
+                    } finally {
+                        this.exportStarting = false;
+                    }
+                },
+
+                exportStatusLabel() {
+                    if (!this.exportJob) return '';
+                    if (this.exportJob.stalled) return this.$t('export.stalled');
+
+                    return this.exportJob.status === 'pending' ? this.$t('export.queued') : this.$t('export.exporting');
                 },
 
                 fieldError(f) { return this.errors[f]?.[0] || ''; },

@@ -70,8 +70,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('books/{book}/setting', [BookSettingController::class, 'show']);
         Route::patch('books/{book}/setting', [BookSettingController::class, 'update']);
 
-        // Book export
-        Route::get('books/{book}/export', [BookExportController::class, 'download']);
+        // Book export: queued, polled for status, then downloaded. The preview renders inline.
+        Route::post('books/{book}/exports', [BookExportController::class, 'store']);
+        Route::get('exports/{export}', [BookExportController::class, 'show']);
+        Route::get('exports/{export}/download', [BookExportController::class, 'download']);
         Route::get('books/{book}/preview', [BookExportController::class, 'preview']);
 
         // Chapters management (shallow: index/store nested, show/update/destroy flat)

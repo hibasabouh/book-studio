@@ -236,10 +236,10 @@ describe('cover in the PDF export', function () {
 
         Sanctum::actingAs($owner);
 
-        $response = $this->get("/api/books/{$book->id}/export");
+        $response = $this->exportBook($book);
 
         $response->assertOk();
-        expect($response->getContent())->toStartWith('%PDF');
+        expect($response->streamedContent())->toStartWith('%PDF');
     })->with(array_column(PdfTemplate::cases(), 'value'))->with([true, false]);
 
     it('adds exactly one page, so the cover does not spill onto a second sheet', function () {
@@ -252,7 +252,7 @@ describe('cover in the PDF export', function () {
                 ->has(Chapter::factory()->count(2), 'chapters')
                 ->create(['cover_path' => $withCover ? 'covers/export.jpg' : null]);
 
-            return $this->get("/api/books/{$book->id}/export")->assertOk()->getContent();
+            return $this->exportBook($book)->assertOk()->streamedContent();
         };
 
         Storage::disk('public')->put(
@@ -275,7 +275,7 @@ describe('cover in the PDF export', function () {
 
         Sanctum::actingAs($owner);
 
-        expect($this->get("/api/books/{$book->id}/export")->assertOk()->getContent())
+        expect($this->exportBook($book)->assertOk()->streamedContent())
             ->toStartWith('%PDF');
     });
 });

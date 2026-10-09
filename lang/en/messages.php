@@ -21,4 +21,9 @@ return [
     'cover_unreadable' => 'The uploaded cover image could not be read.',
     'contact_sent' => 'Thanks — your message has been sent.',
     'contact_message_deleted' => 'Message deleted.',
+    'export_failed_render_failed' => 'The PDF could not be rendered. Check the chapter content and book settings, then try again.',
+    'export_failed_timed_out' => 'The export took too long and was stopped. Please try again in a moment.',
+    'export_failed_unexpected' => 'Something went wrong while generating the PDF. Please try again.',
+    'export_not_ready' => 'This export is not ready to download.',
+    'export_expired' => 'This export has expired. Please export the book again.',
 ];

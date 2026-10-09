@@ -21,7 +21,7 @@ function exportWithSetting(array $overrides, int $chapters = 2): string
         ->has(Chapter::factory()->count($chapters), 'chapters')
         ->create();
 
-    return test()->get("/api/books/{$book->id}/export")->assertOk()->getContent();
+    return test()->exportBook($book)->assertOk()->streamedContent();
 }
 
 beforeEach(function () {
@@ -98,7 +98,7 @@ describe('unusual content', function () {
             ->has(Chapter::factory()->count(2)->state(['content' => null]), 'chapters')
             ->create();
 
-        expect($this->get("/api/books/{$book->id}/export")->assertOk()->getContent())
+        expect($this->exportBook($book)->assertOk()->streamedContent())
             ->toStartWith('%PDF');
     });
 
@@ -113,7 +113,7 @@ describe('unusual content', function () {
             ]), 'chapters')
             ->create(['title' => 'Book & <em>Co</em>']);
 
-        expect($this->get("/api/books/{$book->id}/export")->assertOk()->getContent())
+        expect($this->exportBook($book)->assertOk()->streamedContent())
             ->toStartWith('%PDF');
     });
 
@@ -126,7 +126,7 @@ describe('unusual content', function () {
             ]), 'chapters')
             ->create(['title' => 'كتاب Mixed Script']);
 
-        expect($this->get("/api/books/{$book->id}/export")->assertOk()->getContent())
+        expect($this->exportBook($book)->assertOk()->streamedContent())
             ->toStartWith('%PDF');
     });
 });
@@ -137,7 +137,7 @@ describe('filename', function () {
             ->has(BookSetting::factory(), 'setting')
             ->create(['title' => $title]);
 
-        $disposition = $this->get("/api/books/{$book->id}/export")
+        $disposition = $this->exportBook($book)
             ->assertOk()->headers->get('Content-Disposition');
 
         expect($disposition)->toContain("filename=\"{$ascii}\"")
@@ -155,7 +155,7 @@ describe('filename', function () {
             ->has(BookSetting::factory(), 'setting')
             ->create(['title' => $title]);
 
-        expect($this->get("/api/books/{$book->id}/export")->assertOk()->headers->get('Content-Disposition'))
+        expect($this->exportBook($book)->assertOk()->headers->get('Content-Disposition'))
             ->toContain('filename="book.pdf"')
             ->toContain("filename*=UTF-8''book.pdf");
     })->with(['???', '///']);
@@ -163,7 +163,7 @@ describe('filename', function () {
     it('marks the response as uncacheable, since it is rebuilt every time', function () {
         $book = Book::factory()->for($this->owner)->has(BookSetting::factory(), 'setting')->create();
 
-        $this->get("/api/books/{$book->id}/export")
+        $this->exportBook($book)
             ->assertOk()
             ->assertHeader('Cache-Control', 'no-store, private');
 

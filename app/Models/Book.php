@@ -39,4 +39,12 @@ class Book extends Model
     {
         return $this->hasOne(BookSetting::class);
     }
+
+    /**
+     * @return HasMany<BookExport, $this>
+     */
+    public function exports(): HasMany
+    {
+        return $this->hasMany(BookExport::class);
+    }
 }

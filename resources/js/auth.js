@@ -31,10 +31,10 @@ function xsrfToken() {
  * (with `status` and `data`) on non-2xx.
  *
  * @param {string} url
- * @param {RequestInit} [options]
+ * @param {RequestInit & { toastErrors?: boolean }} [options] toastErrors: false leaves error reporting to the caller
  * @returns {Promise<any>} parsed JSON body (or null for empty responses)
  */
-export async function fetchJson(url, options = {}) {
+export async function fetchJson(url, { toastErrors = true, ...options } = {}) {
     const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
 
     const headers = {
@@ -51,9 +51,11 @@ export async function fetchJson(url, options = {}) {
     try {
         response = await fetch(url, { ...options, headers });
     } catch (networkError) {
-        window.dispatchEvent(new CustomEvent('app:toast', {
-            detail: { message: translate('errors.network'), type: 'error' },
-        }));
+        if (toastErrors) {
+            window.dispatchEvent(new CustomEvent('app:toast', {
+                detail: { message: translate('errors.network'), type: 'error' },
+            }));
+        }
         throw Object.assign(new Error(translate('errors.network')), { status: 0, data: null });
     }
 
@@ -68,7 +70,7 @@ export async function fetchJson(url, options = {}) {
         }
         // Auto-toast every other non-422 error. 422s carry field-level validation
         // messages that each form handles inline — intentionally excluded here.
-        else if (response.status !== 422) {
+        else if (toastErrors && response.status !== 422) {
             window.dispatchEvent(new CustomEvent('app:toast', {
                 detail: { message: data?.message || `Request failed (${response.status})`, type: 'error' },
             }));

@@ -56,6 +56,7 @@ The app ships with a small admin back-office (dashboard stats, user management, 
 - Per-book typography/layout settings and PDF export in 4 templates, with Arabic/RTL support
 - A generated table of contents whose entries jump to their chapter, plus a matching PDF outline for the reader's sidebar
 - In-browser preview of the generated PDF before downloading it
+- Queued PDF export with status polling and a completion notification
 - Admin panel: dashboard stats, user management, contact-message inbox
 - Public contact form, with submissions delivered by email and kept in the admin inbox
 - English / Arabic / French localization
@@ -91,7 +92,7 @@ npm install
 npm run build
 ```
 
-For local development, `composer run dev` starts the app server, queue listener, log viewer (Pail), and Vite dev server together.
+For local development, `composer run dev` starts the app server, queue listener, log viewer (Pail), and Vite dev server together. PDF exports run on the queue, so if you serve the app another way, also run `php artisan queue:work` — otherwise exports stay queued.
 
 ### Demo data
 
@@ -132,7 +133,7 @@ development database.
 Pest feature/unit coverage spans:
 
 - Auth: registration, login, email verification, password reset, Google sign-in, rate limiting
-- Books & chapters: CRUD, authorization, reordering, cover upload/crop, OCR-assisted content, per-book settings/typography, PDF export and preview
+- Books & chapters: CRUD, authorization, reordering, cover upload/crop, OCR-assisted content, per-book settings/typography, queued PDF export (including its failure paths) and preview
 - Admin: dashboard stats, user management, contact-message inbox
 - Contact form: submission, attachments, validation, mail delivery, throttling
 - Supporting pieces: models, enums, middleware, mail rendering, seeders, the cover-image and OTP services, file helpers, and public/authenticated pages
@@ -145,7 +146,6 @@ The JSON API (`routes/api.php`) is documented automatically from its route/reque
 
 The current codebase is a solid core — auth, book/chapter authoring, PDF export, admin panel — with broad Pest feature coverage across auth, books/chapters, admin, contact, and the supporting services. Planned next:
 
-- Queued PDF export with status polling and a completion notification
 - Public, read-only book sharing links
 - Full-text search across books and chapters
 - A paid subscription tier via Stripe

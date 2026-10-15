@@ -13,12 +13,13 @@ class SetLocale
      * Resolve the request locale from the X-Locale header and apply it.
      *
      * Sessionless and header-driven: clients (web fetch + mobile) send their
-     * chosen locale as X-Locale. Only locales listed in
-     * config('app.supported_locales') are honored; anything else keeps the default.
+     * chosen locale as X-Locale. Plain browser navigations can't set headers, so
+     * the `locale` cookie mirrored by the web frontend is the fallback. Only locales
+     * listed in config('app.supported_locales') are honored; anything else keeps the default.
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $locale = $request->header('X-Locale');
+        $locale = $request->header('X-Locale') ?? $request->cookie('locale');
 
         if ($locale && in_array($locale, config('app.supported_locales', ['en']), true)) {
             App::setLocale($locale);

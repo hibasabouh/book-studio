@@ -5,7 +5,7 @@ import Sortable from 'sortablejs';
 import { fetchJson } from './auth';
 import { createCropper, loadImage } from './cropper';
 import exportsStore from './exports';
-import { getLocale, setLocale, translate, isRtl, applyDir, SUPPORTED } from './i18n';
+import { getLocale, setLocale, translate, isRtl, restoreLocale, SUPPORTED } from './i18n';
 
 window.Alpine = Alpine;
 
@@ -174,7 +174,7 @@ Alpine.store('auth', {
 });
 
 document.addEventListener('alpine:init', () => {
-    applyDir(getLocale());
+    restoreLocale();
     Alpine.store('auth').fetchUser();
 });
 

@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Database\QueryException;
+use App\Exceptions\LocalizedErrorRenderer;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,9 +14,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Resolve the request locale (en/ar/fr) from the X-Locale header.
-        $middleware->web(prepend: [\App\Http\Middleware\SetLocale::class]);
-        $middleware->api(prepend: [\App\Http\Middleware\SetLocale::class]);
+        // Resolve the request locale (en/ar/fr) from the X-Locale header; global so
+        // errors raised before a route matches (404/405/503) are translated too.
+        $middleware->prepend(\App\Http\Middleware\SetLocale::class);
+
+        // Written by the JS frontend in plain text (see resources/js/i18n.js).
+        $middleware->encryptCookies(except: ['locale']);
 
         // Sanctum stateful SPA: authenticate web-frontend API requests via session
         // cookie instead of bearer token. Mobile / external clients still use tokens.
@@ -30,10 +33,5 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        // Never leak SQL to the client, even with APP_DEBUG on; the full error is still logged.
-        $exceptions->render(function (QueryException $e, Request $request) {
-            if ($request->expectsJson()) {
-                return response()->json(['message' => __('messages.server_error')], 500);
-            }
-        });
+        $exceptions->render(fn (Throwable $e, Request $request) => app(LocalizedErrorRenderer::class)($e, $request));
     })->create();

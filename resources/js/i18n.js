@@ -23,8 +23,21 @@ export function getLocale() {
 export function setLocale(locale) {
     if (SUPPORTED.includes(locale)) {
         localStorage.setItem('locale', locale);
+        writeLocaleCookie(locale);
         applyDir(locale);
     }
+}
+
+/** Re-apply the stored locale on page load (also backfills the cookie for older sessions). */
+export function restoreLocale() {
+    const locale = getLocale();
+    writeLocaleCookie(locale);
+    applyDir(locale);
+}
+
+// Mirrored into a cookie so server-rendered pages (e.g. error pages) can read it on plain navigations.
+function writeLocaleCookie(locale) {
+    document.cookie = `locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
 }
 
 export function isRtl(locale = getLocale()) {
